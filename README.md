@@ -46,10 +46,10 @@ Laravel を使用したマーケットプレイスアプリケーションです
    ```ini
    DB_CONNECTION=mysql
    DB_HOST=mysql
-   DB_PORT=3306
-   DB_DATABASE=laravel_db
-   DB_USERNAME=laravel_user
-   DB_PASSWORD=laravel_pass
+   DB_PORT=修正箇所
+   DB_DATABASE=修正箇所
+   DB_USERNAME=修正箇所
+   DB_PASSWORD=修正箇所
    ```
 
 3. **Docker コンテナの起動**
