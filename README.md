@@ -46,10 +46,10 @@ Laravel を使用したマーケットプレイスアプリケーションです
    ```ini
    DB_CONNECTION=mysql
    DB_HOST=mysql
-   DB_PORT=修正箇所
-   DB_DATABASE=修正箇所
-   DB_USERNAME=修正箇所
-   DB_PASSWORD=修正箇所
+   DB_PORT=3306
+   DB_DATABASE=laravel_db
+   DB_USERNAME=laravel_user
+   DB_PASSWORD=laravel_pass
    ```
 
 3. **Docker コンテナの起動**
@@ -79,7 +79,7 @@ Laravel を使用したマーケットプレイスアプリケーションです
    php artisan migrate
 
    # シーダーの実行
-   # php artisan db:seed
+   php artisan db:seed
    ```
 
    完了したら `exit` でコンテナから抜けます。
