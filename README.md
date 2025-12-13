@@ -79,7 +79,7 @@ Laravel を使用したマーケットプレイスアプリケーションです
    php artisan migrate
 
    # シーダーの実行
-   # php artisan db:seed
+   php artisan db:seed
    ```
 
    完了したら `exit` でコンテナから抜けます。
