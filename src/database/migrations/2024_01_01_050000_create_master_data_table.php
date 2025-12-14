@@ -15,10 +15,10 @@ class CreateMasterDataTable extends Migration
     {
         Schema::create('master_data', function (Blueprint $table) {
             $table->id();
-            $table->string('type'); // 'condition' または 'payment_method' など
-            $table->string('name'); // プルダウンに表示する名前
+            $table->string('type', 20); // 'condition' または 'payment_method' など
+            $table->string('name', 50); // プルダウンに表示する名前
             $table->timestamps();
-            
+
             // typeとnameの組み合わせでユニーク制約
             $table->unique(['type', 'name']);
         });

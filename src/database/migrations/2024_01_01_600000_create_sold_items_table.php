@@ -18,7 +18,7 @@ class CreateSoldItemsTable extends Migration
             $table->foreignId('item_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('payment_method_id')->constrained('master_data')->onDelete('restrict');
-            $table->string('shipping_postal_code');
+            $table->string('shipping_postal_code', 8);
             $table->string('shipping_address');
             $table->string('shipping_building_name')->nullable();
             $table->timestamps();
