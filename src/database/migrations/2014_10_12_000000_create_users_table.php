@@ -19,14 +19,13 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->rememberToken();
             $table->boolean('is_active')->default(true);
-            $table->string('postal_code', 8)->nullable();
-            $table->string('address')->nullable();
+            $table->string('postal_code', 8);
+            $table->string('address');
             $table->string('building_name')->nullable();
             $table->string('profile_image_path')->nullable();
             $table->timestamps();
-            //Laravelの標準的な認証機能で利用するためのトークン
-            $table->rememberToken();
         });
     }
 
