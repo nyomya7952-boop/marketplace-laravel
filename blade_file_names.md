@@ -1,19 +1,21 @@
 # 画面名称、パス、メソッド、コントローラー、アクション、blade ファイル名の対応表
 
-| 画面名称                                 | パス                        | メソッド | コントローラー     | アクション | blade ファイル名 |
-| ---------------------------------------- | --------------------------- | -------- | ------------------ | ---------- | ---------------- |
-| 商品一覧画面（トップ画面）               | /                           | GET      | ItemController     | index      | index            |
-| ★ 商品一覧画面（トップ画面）\_マイリスト | /?tab=mylist                | GET      | ItemController     | index      | index            |
-| 会員登録画面                             | /register                   | POST     | AuthController     | register   | register         |
-| ログイン画面                             | /login                      | GET      | AuthController     | login      | login            |
-| 商品詳細画面                             | /item/{item_id}             | GET      | ItemController     | detail     | detail           |
-| 商品購入画面                             | /purchase/{item_id}         | POST     | ItemController     | purchase   | purchase         |
-| 住所変更ページ                           | /purchase/address/{item_id} | POST     | ShippingController | shipping   | shipping         |
-| 商品出品画面                             | /sell                       | POST     | ItemController     | create     | create           |
-| プロフィール画面                         | /mypage                     | GET      | UserController     | profile    | profile          |
-| プロフィール編集画面                     | /mypage/profile             | POST     | UserController     | edit       | edit             |
-| ★ プロフィール画面\_購入した商品一覧     | /mypage?page=buy            | GET      | UserController     | profile    | profile          |
-| ★ プロフィール画面\_出品した商品一覧     | /mypage?page=sell           | GET      | UserController     | profile    | profile          |
+| 画面名称                                 | パス                        | メソッド | コントローラー     | アクション      | blade ファイル名 |
+| ---------------------------------------- | --------------------------- | -------- | ------------------ | --------------- | ---------------- |
+| 商品一覧画面（トップ画面）               | /                           | GET      | ItemController     | index           | index            |
+| ★ 商品一覧画面（トップ画面）\_マイリスト | /?tab=mylist                | GET      | ItemController     | index           | index            |
+| 会員登録画面                             | /register                   | POST     | AuthController     | register        | register         |
+| ログイン画面                             | /login                      | GET      | AuthController     | login           | login            |
+| 商品詳細画面                             | /item/{item_id}             | GET      | ItemController     | detail          | detail           |
+| 商品購入画面                             | /purchase/{item_id}         | GET      | PurchaseController | showPurchase    | purchase         |
+| 商品購入処理                             | /purchase/{item_id}         | POST     | PurchaseController | purchase        | -                |
+| 購入成功画面                             | /purchase/{item_id}/success | GET      | PurchaseController | purchaseSuccess | -                |
+| 住所変更ページ                           | /purchase/address/{item_id} | POST     | PurchaseController | shipping        | shipping         |
+| 商品出品画面                             | /sell                       | POST     | ItemController     | create          | create           |
+| プロフィール画面                         | /mypage                     | GET      | UserController     | profile         | profile          |
+| プロフィール編集画面                     | /mypage/profile             | POST     | UserController     | edit            | edit             |
+| ★ プロフィール画面\_購入した商品一覧     | /mypage?page=buy            | GET      | UserController     | profile         | profile          |
+| ★ プロフィール画面\_出品した商品一覧     | /mypage?page=sell           | GET      | UserController     | profile         | profile          |
 
 ## ファイル配置例
 
@@ -53,8 +55,14 @@ Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::get('/mypage', [UserController::class, 'profile'])->name('users.profile');
 Route::post('/mypage/profile', [UserController::class, 'edit'])->name('users.edit');
 
+// 商品購入関連
+Route::get('/purchase/{item_id}', [PurchaseController::class, 'showPurchase'])->name('items.purchase.show');
+Route::post('/purchase/{item_id}', [PurchaseController::class, 'purchase'])->name('items.purchase');
+Route::get('/purchase/{item_id}/success', [PurchaseController::class, 'purchaseSuccess'])->name('items.purchase.success');
+
 // 送付先住所関連
-Route::post('/purchase/address/{item_id}', [ShippingController::class, 'shipping'])->name('shipping.update');
+Route::get('/purchase/address/{item_id}', [PurchaseController::class, 'showShipping'])->name('shipping.show');
+Route::post('/purchase/address/{item_id}', [PurchaseController::class, 'shipping'])->name('shipping.update');
 ```
 
 ## 補足説明
@@ -66,3 +74,6 @@ Route::post('/purchase/address/{item_id}', [ShippingController::class, 'shipping
 - **プロフィール画面\_出品した商品一覧**: `profile.blade.php` を使用。`page=sell` パラメータで表示内容を切り替え。
 
 これらは同じ blade ファイル内で条件分岐により表示内容を変更する設計です。
+
+## コーディング規約
+

@@ -35,7 +35,7 @@
             <!-- 支払い方法 -->
             <div class="purchase__section">
                 <h2 class="purchase__section-title">支払い方法</h2>
-                <form id="purchase-form" action="{{ route('items.purchase', ['item_id' => $item->id]) }}" method="post">
+                <form id="purchase-form" action="{{ route('items.purchase', ['item_id' => $item->id]) }}" method="post" novalidate>
                     @csrf
                     <select name="payment_method_id" id="payment_method" class="purchase__select" required>
                         <option value="">選択してください</option>
@@ -43,6 +43,11 @@
                             <option value="{{ $paymentMethod->id }}">{{ $paymentMethod->name }}</option>
                         @endforeach
                     </select>
+                    <div class="purchase__error">
+                        @error('payment_method_id')
+                        {{ $message }}
+                        @enderror
+                    </div>
                 </form>
             </div>
 
@@ -51,14 +56,15 @@
                 <h2 class="purchase__section-title">配送先</h2>
                 <div class="purchase__shipping-info">
                     <div class="purchase__shipping-address">
-                        <div>〒 {{ $shippingPostalCode }}</div>
-                        <div>{{ $shippingAddress }}</div>
+                        <div>〒 {{ $shippingPostalCode === '000' ? '' : $shippingPostalCode }}</div>
+                        <div>{{ $shippingAddress === '住所未設定' ? '' : $shippingAddress }}</div>
                         @if($shippingBuildingName)
                             <div>{{ $shippingBuildingName }}</div>
                         @endif
                     </div>
                     <a href="{{ route('shipping.show', ['item_id' => $item->id]) }}" class="purchase__change-link">変更する</a>
                 </div>
+                <div class="purchase__error" id="shipping-error"></div>
                 <div class="purchase__divider"></div>
             </div>
         </div>
@@ -86,11 +92,45 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectedPayment = document.getElementById('selected-payment');
     const purchaseForm = document.getElementById('purchase-form');
     const purchaseButton = document.querySelector('.purchase__button');
+    const paymentErrorDiv = document.querySelector('.purchase__error');
+    const shippingErrorDiv = document.getElementById('shipping-error');
     const paymentMethods = {
         @foreach($paymentMethods as $paymentMethod)
         '{{ $paymentMethod->id }}': '{{ $paymentMethod->name }}',
         @endforeach
     };
+
+    // 支払い方法のエラーメッセージを表示する関数
+    function showPaymentError(message) {
+        if (paymentErrorDiv) {
+            paymentErrorDiv.textContent = message;
+            paymentErrorDiv.style.display = 'block';
+        }
+    }
+
+    // 支払い方法のエラーメッセージをクリアする関数
+    function clearPaymentError() {
+        if (paymentErrorDiv) {
+            paymentErrorDiv.textContent = '';
+            paymentErrorDiv.style.display = 'none';
+        }
+    }
+
+    // 配送先のエラーメッセージを表示する関数
+    function showShippingError(message) {
+        if (shippingErrorDiv) {
+            shippingErrorDiv.textContent = message;
+            shippingErrorDiv.style.display = 'block';
+        }
+    }
+
+    // 配送先のエラーメッセージをクリアする関数
+    function clearShippingError() {
+        if (shippingErrorDiv) {
+            shippingErrorDiv.textContent = '';
+            shippingErrorDiv.style.display = 'none';
+        }
+    }
 
     paymentSelect.addEventListener('change', function() {
         const selectedId = this.value;
@@ -99,6 +139,8 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             selectedPayment.textContent = '-';
         }
+        // 選択が変更されたらエラーメッセージをクリア
+        clearPaymentError();
     });
 
     // フォーム送信をインターセプトしてAJAXで処理
@@ -115,6 +157,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitButton.textContent = '処理中...';
             }
 
+            // エラーメッセージをクリア
+            clearPaymentError();
+            clearShippingError();
+
             fetch(purchaseForm.action, {
                 method: 'POST',
                 headers: {
@@ -123,9 +169,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 body: formData
             })
-            .then(response => response.json())
+            .then(response => {
+                // バリデーションエラー（422）の場合
+                if (response.status === 422) {
+                    return response.json().then(data => {
+                        throw { isValidationError: true, data: data };
+                    });
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success && data.url) {
+                    // エラーメッセージをクリア
+                    clearPaymentError();
+                    clearShippingError();
+                    
                     // Stripe決済画面を新規タブで開く（コンビニ支払い・カード支払い共通）
                     const stripeWindow = window.open(data.url, '_blank');
 
@@ -151,7 +209,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }, 1000);
                 } else {
-                    alert(data.message || 'エラーが発生しました');
+                    // その他のエラー（配送先エラーなど）
+                    // メッセージに「配送先」が含まれている場合は配送先エラーとして表示
+                    const errorMessage = data.message || 'エラーが発生しました';
+                    if (errorMessage.includes('配送先')) {
+                        showShippingError(errorMessage);
+                    } else {
+                        showPaymentError(errorMessage);
+                    }
                     if (submitButton) {
                         submitButton.disabled = false;
                         submitButton.textContent = '購入する';
@@ -160,7 +225,14 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('エラーが発生しました');
+                
+                // バリデーションエラーの場合（支払い方法のエラー）
+                if (error.isValidationError && error.data) {
+                    showPaymentError(error.data.message || '入力内容に誤りがあります');
+                } else {
+                    showPaymentError('エラーが発生しました');
+                }
+                
                 if (submitButton) {
                     submitButton.disabled = false;
                     submitButton.textContent = '購入する';

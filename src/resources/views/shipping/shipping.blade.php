@@ -9,12 +9,12 @@
     <div class="shipping__container">
         <h1 class="shipping__title">送付先住所変更</h1>
 
-        <form action="{{ route('shipping.update', ['item_id' => $item->id]) }}" method="post" class="shipping__form">
+        <form action="{{ route('shipping.update', ['item_id' => $item->id]) }}" method="post" class="shipping__form" novalidate>
             @csrf
 
             <div class="shipping__field">
                 <label for="postal_code" class="shipping__label">郵便番号</label>
-                <input type="text" name="postal_code" id="postal_code" class="shipping__input" value="{{ old('postal_code', $shippingPostalCode) }}" required maxlength="8" placeholder="例: 123-4567">
+                <input type="text" name="postal_code" id="postal_code" class="shipping__input" value="{{ old('postal_code', $shippingPostalCode === '000' ? '' : $shippingPostalCode) }}" required maxlength="8" placeholder="例: 123-4567">
                 @error('postal_code')
                     <div class="shipping__error">{{ $message }}</div>
                 @enderror
@@ -22,7 +22,7 @@
 
             <div class="shipping__field">
                 <label for="address" class="shipping__label">住所</label>
-                <input type="text" name="address" id="address" class="shipping__input" value="{{ old('address', $shippingAddress) }}" required maxlength="255" placeholder="例: 東京都渋谷区...">
+                <input type="text" name="address" id="address" class="shipping__input" value="{{ old('address', $shippingAddress === '住所未設定' ? '' : $shippingAddress) }}" required maxlength="255" placeholder="例: 東京都渋谷区...">
                 @error('address')
                     <div class="shipping__error">{{ $message }}</div>
                 @enderror

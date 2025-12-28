@@ -39,7 +39,7 @@ class ItemsTableSeeder extends Seeder
                 'price' => 15000,
                 'brand' => 'Rolax',
                 'description' => 'スタイリッシュなデザインのメンズ腕時計',
-                'image_path' => 'https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Armani+Mens+Clock.jpg',
+                'image_path' => 'items/Armani+Mens+Clock.jpg',
                 'condition' => '良好',
             ],
             [
@@ -47,7 +47,7 @@ class ItemsTableSeeder extends Seeder
                 'price' => 5000,
                 'brand' => '西芝',
                 'description' => '高速で信頼性の高いハードディスク',
-                'image_path' => 'https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/HDD+Hard+Disk.jpg',
+                'image_path' => 'items/HDD+Hard+Disk.jpg',
                 'condition' => '目立った傷や汚れなし',
             ],
             [
@@ -55,7 +55,7 @@ class ItemsTableSeeder extends Seeder
                 'price' => 300,
                 'brand' => 'なし',
                 'description' => '新鮮な玉ねぎ3束のセット',
-                'image_path' => 'https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/iLoveIMG+d.jpg',
+                'image_path' => 'items/iLoveIMG+d.jpg',
                 'condition' => 'やや傷や汚れあり',
             ],
             [
@@ -63,7 +63,7 @@ class ItemsTableSeeder extends Seeder
                 'price' => 4000,
                 'brand' => 'なし',
                 'description' => 'クラシックなデザインの革靴',
-                'image_path' => 'https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Leather+Shoes+Product+Photo.jpg',
+                'image_path' => 'items/Leather+Shoes+Product+Photo.jpg',
                 'condition' => '状態が悪い',
             ],
             [
@@ -71,7 +71,7 @@ class ItemsTableSeeder extends Seeder
                 'price' => 45000,
                 'brand' => 'なし',
                 'description' => '高性能なノートパソコン',
-                'image_path' => 'https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Living+Room+Laptop.jpg',
+                'image_path' => 'items/Living+Room+Laptop.jpg',
                 'condition' => '良好',
             ],
             [
@@ -79,7 +79,7 @@ class ItemsTableSeeder extends Seeder
                 'price' => 8000,
                 'brand' => 'なし',
                 'description' => '高音質のレコーディング用マイク',
-                'image_path' => 'https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Music+Mic+4632231.jpg',
+                'image_path' => 'items/Music+Mic+4632231.jpg',
                 'condition' => '目立った傷や汚れなし',
             ],
             [
@@ -87,7 +87,7 @@ class ItemsTableSeeder extends Seeder
                 'price' => 3500,
                 'brand' => 'なし',
                 'description' => 'おしゃれなショルダーバッグ',
-                'image_path' => 'https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Purse+fashion+pocket.jpg',
+                'image_path' => 'items/Purse+fashion+pocket.jpg',
                 'condition' => 'やや傷や汚れあり',
             ],
             [
@@ -95,7 +95,7 @@ class ItemsTableSeeder extends Seeder
                 'price' => 500,
                 'brand' => 'なし',
                 'description' => '使いやすいタンブラー',
-                'image_path' => 'https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Tumbler+souvenir.jpg',
+                'image_path' => 'items/Tumbler+souvenir.jpg',
                 'condition' => '状態が悪い',
             ],
             [
@@ -103,7 +103,7 @@ class ItemsTableSeeder extends Seeder
                 'price' => 4000,
                 'brand' => 'Starbacks',
                 'description' => '手動のコーヒーミル',
-                'image_path' => 'https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Waitress+with+Coffee+Grinder.jpg',
+                'image_path' => 'items/Waitress+with+Coffee+Grinder.jpg',
                 'condition' => '良好',
             ],
             [
@@ -111,7 +111,7 @@ class ItemsTableSeeder extends Seeder
                 'price' => 2500,
                 'brand' => 'なし',
                 'description' => '便利なメイクアップセット',
-                'image_path' => 'https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/%E5%A4%96%E5%87%BA%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AE%E3%83%A1%E3%82%A4%E3%82%AF%E3%82%A2%E3%83%83%E3%83%97%E3%82%BB%E3%83%83%E3%83%88.jpg',
+                'image_path' => 'items/外出メイクアップセット.jpg',
                 'condition' => '目立った傷や汚れなし',
             ],
         ];

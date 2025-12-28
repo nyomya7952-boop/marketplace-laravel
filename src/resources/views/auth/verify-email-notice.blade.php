@@ -28,9 +28,10 @@
             }
         @endphp
         @if($user)
-            <a href="{{ route('verification.verify', ['id' => $user->id, 'hash' => sha1($user->getEmailForVerification())]) }}" class="verify-email__button">
-                認証はこちらから
-            </a>
+                <a href="http://localhost:8025" target="_blank" class="verify-email__button">
+                    認証はこちらから
+                </a>
+                <br>
         @endif
 
         <div style="margin-top: 20px;">

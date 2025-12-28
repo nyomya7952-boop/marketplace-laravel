@@ -147,6 +147,12 @@
     margin-top: 20px;
 }
 
+.purchase__error {
+    height: 20px;
+    color: #ff0000;
+    text-align: left;
+}
+
 /* 右側：注文サマリー */
 .purchase__right {
     display: flex;

@@ -7,9 +7,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Verified;
 use App\Models\User;
+use App\Http\Requests\RegisterRequest;
 
 class AuthController extends Controller
 {
+    /**
+     * ログイン画面表示
+     */
     public function login()
     {
         return view('auth.login');
@@ -26,20 +30,14 @@ class AuthController extends Controller
     /**
      * 会員登録処理
      */
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:20',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|confirmed|min:8',
-        ]);
-
         $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
             // 必須カラムの初期値
-            'postal_code' => '000-0000',
+            'postal_code' => '000',
             'address' => '住所未設定',
         ]);
 
@@ -120,7 +118,7 @@ class AuthController extends Controller
             }
             // セッションからメールアドレスを削除
             $request->session()->forget('verification_email');
-            return redirect()->route('items.index');
+            return redirect()->route('user.edit');
         }
 
         if ($user->markEmailAsVerified()) {
@@ -133,6 +131,6 @@ class AuthController extends Controller
         // セッションからメールアドレスを削除
         $request->session()->forget('verification_email');
 
-        return redirect()->route('items.index')->with('verified', true);
+        return redirect()->route('user.edit')->with('verified', true);
     }
 }
