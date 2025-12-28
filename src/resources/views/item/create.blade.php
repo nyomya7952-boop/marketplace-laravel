@@ -15,7 +15,7 @@
         <div class="create__alert create__alert--success">{{ session('success') }}</div>
     @endif
 
-    <form action="{{ route('items.create') }}" method="post" enctype="multipart/form-data" class="create__form">
+    <form action="{{ route('items.create') }}" method="post" enctype="multipart/form-data" class="create__form" novalidate>
         @csrf
 
         <!-- 商品画像 -->
@@ -26,7 +26,7 @@
                     <span class="create__image-placeholder">画像を選択してください</span>
                 </div>
                 <label for="image" class="create__image-button">
-                    <input type="file" name="image" id="image" accept="image/*" required style="display: none;">
+                    <input type="file" name="image" id="image" accept="image/jpeg,image/png" required style="display: none;">
                     画像を選択する
                 </label>
             </div>
@@ -45,7 +45,7 @@
                 <div class="create__categories">
                     @foreach($categories as $category)
                         <label class="create__category-item">
-                            <input type="checkbox" name="category_ids[]" value="{{ $category->id }}" class="create__category-checkbox">
+                            <input type="checkbox" name="category_ids[]" value="{{ $category->id }}" class="create__category-checkbox" {{ in_array($category->id, old('category_ids', [])) ? 'checked' : '' }}>
                             <span class="create__category-label">{{ $category->name }}</span>
                         </label>
                     @endforeach
@@ -97,7 +97,7 @@
             <!-- 商品の説明 -->
             <div class="create__field">
                 <label for="description" class="create__label">商品の説明</label>
-                <textarea name="description" id="description" class="create__textarea" rows="5" maxlength="255" placeholder="商品の説明を入力してください">{{ old('description') }}</textarea>
+                <textarea name="description" id="description" class="create__textarea" rows="5" placeholder="商品の説明を入力してください">{{ old('description') }}</textarea>
                 @error('description')
                     <div class="create__error">{{ $message }}</div>
                 @enderror

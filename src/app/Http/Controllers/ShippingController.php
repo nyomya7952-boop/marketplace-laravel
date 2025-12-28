@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Item;
+use App\Http\Requests\AddressRequest;
 
 class ShippingController extends Controller
 {
@@ -25,14 +26,8 @@ class ShippingController extends Controller
         ]);
     }
 
-    public function shipping(Request $request, $item_id)
+    public function shipping(AddressRequest $request, $item_id)
     {
-        $request->validate([
-            'postal_code' => 'required|string|max:8',
-            'address' => 'required|string|max:255',
-            'building_name' => 'nullable|string|max:255',
-        ]);
-
         session([
             'shipping_postal_code' => $request->postal_code,
             'shipping_address' => $request->address,

@@ -8,6 +8,7 @@ use App\Models\Item;
 use App\Models\MasterData;
 use App\Services\StripeService;
 use App\Services\PurchaseService;
+use App\Http\Requests\PurchaseRequest;
 
 class PurchaseController extends Controller
 {
@@ -74,12 +75,8 @@ class PurchaseController extends Controller
         return null;
     }
 
-    public function purchase(Request $request, $item_id)
+    public function purchase(PurchaseRequest $request, $item_id)
     {
-        $request->validate([
-            'payment_method_id' => 'required|exists:master_data,id',
-        ]);
-
         $item = Item::findOrFail($item_id);
 
         // 購入可能かチェック
@@ -89,6 +86,16 @@ class PurchaseController extends Controller
         }
 
         $shippingInfo = $this->getShippingInfo();
+
+        // 配送先が設定されているかチェック
+        if (empty($shippingInfo['postal_code']) || $shippingInfo['postal_code'] === '000' || empty($shippingInfo['address']) || $shippingInfo['address'] === '住所未設定') {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => '配送先を設定してください'], 400);
+            }
+            return redirect()->route('items.purchase.show', ['item_id' => $item_id])
+                ->with('error', '配送先を設定してください');
+        }
+
         $paymentMethod = MasterData::findOrFail($request->payment_method_id);
 
         // Stripe決済処理
@@ -188,5 +195,4 @@ class PurchaseController extends Controller
                 ->with('error', '購入処理中にエラーが発生しました');
         }
     }
-
 }

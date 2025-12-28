@@ -8,10 +8,10 @@
 <div class="items__content">
     <!-- タブセクション -->
     <div class="items__tabs">
-        <a href="{{ route('items.index') }}" class="items__tab {{ $activeTab === 'recommended' ? 'items__tab--active' : '' }}">
+        <a href="{{ route('items.index', array_merge(['tab' => 'recommended'], request('search') ? ['search' => request('search')] : [])) }}" class="items__tab {{ $activeTab === 'recommended' ? 'items__tab--active' : '' }}">
             おすすめ
         </a>
-        <a href="{{ route('items.index', ['tab' => 'mylist']) }}" class="items__tab {{ $activeTab === 'mylist' ? 'items__tab--active' : '' }}">
+        <a href="{{ route('items.index', array_merge(['tab' => 'mylist'], request('search') ? ['search' => request('search')] : [])) }}" class="items__tab {{ $activeTab === 'mylist' ? 'items__tab--active' : '' }}">
             マイリスト
         </a>
     </div>

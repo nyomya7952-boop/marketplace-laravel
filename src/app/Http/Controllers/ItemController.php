@@ -12,12 +12,15 @@ use App\Models\Comment;
 use App\Models\Category;
 use App\Models\Brand;
 use App\Models\MasterData;
+use App\Http\Requests\ExhibitionRequest;
+use App\Http\Requests\CommentRequest;
 
 class ItemController extends Controller
 {
     public function index(Request $request)
     {
         $tab = $request->get('tab', 'recommended'); // デフォルトはおすすめ
+        $search = $request->get('search'); // 検索キーワード
 
         if ($tab === 'mylist') {
             // マイリストタブ：いいねした商品のみ
@@ -27,7 +30,14 @@ class ItemController extends Controller
             } else {
                 // 認証ユーザーがいいねした商品を取得
                 $likedItemIds = Auth::user()->likes()->pluck('item_id');
-                $items = Item::whereIn('id', $likedItemIds)->get();
+                $query = Item::whereIn('id', $likedItemIds);
+
+                // 検索キーワードがある場合、商品名で部分一致検索　　　　　　　　　　　　　　　　　　　　
+                if ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                }
+
+                $items = $query->get();
             }
         } else {
             // おすすめタブ：全商品（自分が出品した商品を除く）
@@ -38,12 +48,18 @@ class ItemController extends Controller
                 $query->where('user_id', '!=', Auth::id());
             }
 
+            // 検索キーワードがある場合、商品名で部分一致検索
+            if ($search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            }
+
             $items = $query->get();
         }
 
         return view('item.index', [
             'items' => $items,
-            'activeTab' => $tab
+            'activeTab' => $tab,
+            'search' => $search
         ]);
     }
 
@@ -73,12 +89,8 @@ class ItemController extends Controller
         ]);
     }
 
-    public function comment(Request $request, $item_id)
+    public function comment(CommentRequest $request, $item_id)
     {
-        $request->validate([
-            'content' => 'required|string|max:255',
-        ]);
-
         $item = Item::findOrFail($item_id);
 
         Comment::create([
@@ -102,19 +114,8 @@ class ItemController extends Controller
         ]);
     }
 
-    public function create(Request $request)
+    public function create(ExhibitionRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:100',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'category_ids' => 'required|array|min:1',
-            'category_ids.*' => 'exists:categories,id',
-            'condition_id' => 'required|exists:master_data,id',
-            'brand_name' => 'nullable|string|max:100',
-            'description' => 'nullable|string|max:255',
-            'price' => 'required|integer|min:1',
-        ]);
-
         DB::beginTransaction();
         try {
             // 画像をアップロード

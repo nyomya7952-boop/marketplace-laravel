@@ -20,7 +20,7 @@
             <div class="form__group-content">
                 <div class="form__input--text">
                     <label for="profile_image_path" class="form__file-label">画像を選択する</label>
-                    <input type="file" name="profile_image_path" id="profile_image_path" accept="image/*" />
+                    <input type="file" name="profile_image_path" id="profile_image_path" accept="image/jpeg,image/png" />
                 </div>
             </div>
             <div class="form__error">
@@ -50,7 +50,7 @@
             </div>
             <div class="form__group-content">
                 <div class="form__input--text">
-                    <input type="text" name="postal_code" value="{{ old('postal_code', Auth::user()->postal_code) }}" />
+                    <input type="text" name="postal_code" value="{{ old('postal_code', Auth::user()->postal_code === '000' ? '' : Auth::user()->postal_code) }}" />
                 </div>
                 <div class="form__error">
                     @error('postal_code')
@@ -65,7 +65,7 @@
             </div>
             <div class="form__group-content">
                 <div class="form__input--text">
-                    <input type="text" name="address" value="{{ old('address', Auth::user()->address) }}" />
+                    <input type="text" name="address" value="{{ old('address', Auth::user()->address === '住所未設定' ? '' : Auth::user()->address) }}" />
                 </div>
                 <div class="form__error">
                     @error('address')

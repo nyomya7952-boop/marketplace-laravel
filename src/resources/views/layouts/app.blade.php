@@ -29,6 +29,9 @@
                 <li class="header__nav-item">
                     <form class="header__search-form" action="{{ route('items.index') }}" method="get">
                         <input type="search" name="search" class="header__search-input" placeholder="何をお探しですか？" value="{{ request('search') }}">
+                        @if(request('tab'))
+                            <input type="hidden" name="tab" value="{{ request('tab') }}">
+                        @endif
                     </form>
                 </li>
                 <li class="header__nav-item">

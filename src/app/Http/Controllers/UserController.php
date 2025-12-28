@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Item;
 use App\Models\SoldItem;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\ProfileRequest;
 
 class UserController extends Controller
 {
@@ -49,25 +50,42 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function update(ProfileRequest $request)
     {
         $user = Auth::user();
         if (!$user) {
             return redirect()->route('login');
         }
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:20',
-            'postal_code' => 'required|string|max:8',
-            'address' => 'required|string|max:255',
-            'building_name' => 'nullable|string|max:255',
-            'profile_image_path' => 'nullable|image|max:2048',
-        ]);
+        // バリデーション済みデータを取得
+        $validated = $request->validated();
 
         // 画像アップロード
         if ($request->hasFile('profile_image_path')) {
-            $path = $request->file('profile_image_path')->store('public/profile');
+            $file = $request->file('profile_image_path');
+            $extension = strtolower($file->getClientOriginalExtension());
+
+            // 拡張子をチェック（TIFファイルなどを除外）
+            $allowedExtensions = ['jpeg', 'png'];
+            if (!in_array($extension, $allowedExtensions)) {
+                return redirect()->back()
+                    ->withErrors(['profile_image_path' => '画像はjpeg,png形式で選択してください'])
+                    ->withInput();
+            }
+
+            // 古い画像を削除
+            if ($user->profile_image_path) {
+                Storage::disk('public')->delete($user->profile_image_path);
+            }
+
+            // 新しい画像を保存
+            $path = $file->store('public/profile');
             $validated['profile_image_path'] = str_replace('public/', '', $path);
+        }
+
+        // building_nameも更新（バリデーションルールに含まれていないが、フォームには存在）
+        if ($request->has('building_name')) {
+            $validated['building_name'] = $request->building_name;
         }
 
         $user->update($validated);
