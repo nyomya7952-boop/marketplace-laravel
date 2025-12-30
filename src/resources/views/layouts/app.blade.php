@@ -50,7 +50,11 @@
                     <a class="header__nav-link" href="{{ route('user.profile') }}">マイページ</a>
                 </li>
                 <li class="header__nav-item">
-                    <a class="header__nav-button" href="/sell">出品</a>
+                    @auth
+                        <a class="header__nav-button" href="/sell">出品</a>
+                    @else
+                        <a class="header__nav-button" href="{{ route('login') }}">出品</a>
+                    @endauth
                 </li>
             </ul>
         </nav>

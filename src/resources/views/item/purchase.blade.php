@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // エラーメッセージをクリア
                     clearPaymentError();
                     clearShippingError();
-                    
+
                     // Stripe決済画面を新規タブで開く（コンビニ支払い・カード支払い共通）
                     const stripeWindow = window.open(data.url, '_blank');
 
@@ -225,14 +225,14 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => {
                 console.error('Error:', error);
-                
+
                 // バリデーションエラーの場合（支払い方法のエラー）
                 if (error.isValidationError && error.data) {
                     showPaymentError(error.data.message || '入力内容に誤りがあります');
                 } else {
                     showPaymentError('エラーが発生しました');
                 }
-                
+
                 if (submitButton) {
                     submitButton.disabled = false;
                     submitButton.textContent = '購入する';

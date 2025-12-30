@@ -123,8 +123,7 @@ class CommentTest extends TestCase
         $detailResponse->assertSee('コメントを入力してください');
         $detailResponse->assertSee('コメントを送信する');
 
-        // 4. コメントを入力せずにコメント送信ボタンを押下する操作をシミュレート
-        // （商品詳細ページからフォームを送信する形でテスト）
+        // 4. コメントを入力せずにコメント送信ボタンを押下
         $postResponse = $this->actingAs($seller)
             ->from(route('items.detail', ['item_id' => $item->id]))
             ->post(route('items.comment', ['item_id' => $item->id]), [
@@ -175,8 +174,7 @@ class CommentTest extends TestCase
         $detailResponse->assertSee('コメントを入力してください');
         $detailResponse->assertSee('コメントを送信する');
 
-        // 4. 255文字を超えるコメント（256文字）を入力してコメント送信ボタンを押下する操作をシミュレート
-        // （商品詳細ページからフォームを送信する形でテスト）
+        // 4. 255文字を超えるコメント（256文字）を入力してコメント送信ボタンを押下
         $longComment = str_repeat('a', 256);
         $postResponse = $this->actingAs($seller)
             ->from(route('items.detail', ['item_id' => $item->id]))
