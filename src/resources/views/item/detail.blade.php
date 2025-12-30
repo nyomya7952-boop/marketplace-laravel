@@ -126,23 +126,23 @@
         @endif
 
         <!-- コメント投稿フォーム -->
-        @auth
-            <div class="detail__comment-form">
-                <h3 class="detail__section-title">商品へのコメント</h3>
-                <form action="{{ route('items.comment', ['item_id' => $item->id]) }}" method="post">
-                    @csrf
-                    <textarea name="content" class="detail__comment-textarea" rows="5" placeholder="コメントを入力してください"></textarea>
-                    @error('content')
-                        <div class="detail__error">{{ $message }}</div>
-                    @enderror
-                    <button type="submit" class="detail__comment-submit">コメントを送信する</button>
-                </form>
-            </div>
-        @else
-            <div class="detail__comment-login-message">
-                <p>コメントするには<a href="{{ route('login') }}">ログイン</a>してください</p>
-            </div>
-        @endauth
+        <div class="detail__comment-form">
+            <h3 class="detail__section-title">商品へのコメント</h3>
+            <form id="comment-form" action="{{ route('items.comment', ['item_id' => $item->id]) }}" method="post">
+                @csrf
+                <textarea name="content" class="detail__comment-textarea" rows="5" placeholder="コメントを入力してください"></textarea>
+                @error('content')
+                    <div class="detail__error">
+                        @if($message === 'コメントするにはログインしてください')
+                            コメントするには<a href="{{ route('login') }}">ログイン</a>してください
+                        @else
+                            {{ $message }}
+                        @endif
+                    </div>
+                @enderror
+                <button type="submit" class="detail__comment-submit">コメントを送信する</button>
+            </form>
+        </div>
     </div>
 </div>
 @endsection
@@ -150,6 +150,7 @@
 @section('js')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // いいねボタンの処理
     const likeButton = document.querySelector('.detail__like-button');
 
     if (likeButton) {
@@ -208,6 +209,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
 });
 </script>
 @endsection
