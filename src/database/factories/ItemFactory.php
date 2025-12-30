@@ -24,7 +24,7 @@ class ItemFactory extends Factory
         return [
             'name' => substr($this->faker->words(3, true), 0, 100),
             'image_path' => null,
-            'is_sold' => false,
+            'is_sold' => null, // null = 未購入、'pending' = 入金待ち、'sold' = 購入済み
             'user_id' => User::factory(),
             'brand_id' => null,
             'price' => $this->faker->numberBetween(100, 100000),
