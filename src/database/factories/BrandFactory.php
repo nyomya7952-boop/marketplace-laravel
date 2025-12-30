@@ -22,7 +22,7 @@ class BrandFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->company(),
+            'name' => substr($this->faker->company(), 0, 100),
         ];
     }
 }

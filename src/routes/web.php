@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\ListingController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PurchaseController;
@@ -25,7 +26,7 @@ Route::get('/', [ItemController::class, 'index'])->name('items.index');
 Route::get('/item/{item_id}', [ItemController::class, 'detail'])->name('items.detail');
 
 // 商品詳細コメント機能
-Route::post('/item/{item_id}/comment', [ItemController::class, 'comment'])->name('items.comment')->middleware(['auth', 'verified']);
+Route::post('/item/{item_id}/comment', [ItemController::class, 'comment'])->name('items.comment');
 
 // 商品詳細いいね機能
 Route::post('/item/{item_id}/like', [ItemController::class, 'toggleLike'])->name('items.like.toggle')->middleware(['auth', 'verified']);
@@ -40,8 +41,8 @@ Route::get('/purchase/address/{item_id}', [ShippingController::class, 'showShipp
 Route::post('/purchase/address/{item_id}', [ShippingController::class, 'shipping'])->name('shipping.update')->middleware(['auth', 'verified']);
 
 // 商品出品関連
-Route::get('/sell', [ItemController::class, 'showCreate'])->name('items.create.show')->middleware(['auth', 'verified']);
-Route::post('/sell', [ItemController::class, 'create'])->name('items.create')->middleware(['auth', 'verified']);
+Route::get('/sell', [ListingController::class, 'showCreate'])->name('items.create.show')->middleware(['auth', 'verified']);
+Route::post('/sell', [ListingController::class, 'create'])->name('items.create')->middleware(['auth', 'verified']);
 
 // 認証関連
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');

@@ -22,7 +22,7 @@ class ItemFactory extends Factory
         ]);
 
         return [
-            'name' => $this->faker->words(3, true),
+            'name' => substr($this->faker->words(3, true), 0, 100),
             'image_path' => null,
             'is_sold' => false,
             'user_id' => User::factory(),
