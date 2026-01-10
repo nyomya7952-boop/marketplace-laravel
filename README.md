@@ -55,6 +55,7 @@ Laravel を使用したマーケットプレイスアプリケーションです
    DB_DATABASE=laravel_db
    DB_USERNAME=laravel_user
    DB_PASSWORD=laravel_pass
+   ```
 
    ```ini
    // メール認証設定
@@ -66,6 +67,7 @@ Laravel を使用したマーケットプレイスアプリケーションです
    MAIL_ENCRYPTION=null
    MAIL_FROM_ADDRESS="noreply@example.com"
    MAIL_FROM_NAME="${APP_NAME}"
+   ```
 
     ```ini
    //　Stripe設定
