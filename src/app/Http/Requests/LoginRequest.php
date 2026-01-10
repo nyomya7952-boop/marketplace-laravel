@@ -2,9 +2,6 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Laravel\Fortify\Http\Requests\LoginRequest as FortifyLoginRequest;
 
 class LoginRequest extends FortifyLoginRequest
@@ -34,23 +31,6 @@ class LoginRequest extends FortifyLoginRequest
             'email.email' => 'メールアドレスの形式が正しくありません',
             'password.required' => 'パスワードを入力してください',
         ];
-    }
-
-    /**
-     * Handle a failed validation attempt.
-     *
-     * @param  \Illuminate\Contracts\Validation\Validator  $validator
-     * @return void
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(
-            redirect()->back()
-                ->withErrors($validator)
-                ->withInput()
-        );
     }
 }
 

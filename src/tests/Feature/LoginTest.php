@@ -15,7 +15,7 @@ class LoginTest extends TestCase
     /**
      * メールアドレスが入力されていない場合、バリデーションメッセージが表示される
      */
-    public function test_email_validation_when_empty()
+    public function testEmailValidationWhenEmpty()
     {
         // 1. ログインページを開く
         $response = $this->get(route('login'));
@@ -37,7 +37,7 @@ class LoginTest extends TestCase
     /**
      * パスワードが入力されていない場合、バリデーションメッセージが表示される
      */
-    public function test_password_validation_when_empty()
+    public function testPasswordValidationWhenEmpty()
     {
         // 1. ログインページを開く
         $response = $this->get(route('login'));
@@ -59,7 +59,7 @@ class LoginTest extends TestCase
     /**
      * 入力情報が間違っている場合、バリデーションメッセージが表示される
      */
-    public function test_login_fails_with_invalid_credentials()
+    public function testLoginFailsWithInvalidCredentials()
     {
         // 1. ログインページを開く
         $response = $this->get(route('login'));
@@ -81,7 +81,7 @@ class LoginTest extends TestCase
     /**
      * 正しい情報が入力された場合、ログイン処理が実行される
      */
-    public function test_successful_login_with_valid_credentials()
+    public function testSuccessfulLoginWithValidCredentials()
     {
         // メール認証済みのユーザーを作成
         $user = User::factory()->create([

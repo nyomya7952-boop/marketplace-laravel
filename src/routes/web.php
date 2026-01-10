@@ -23,26 +23,26 @@ use App\Http\Controllers\StripeWebhookController;
 Route::get('/', [ItemController::class, 'index'])->name('items.index');
 
 // 商品詳細
-Route::get('/item/{item_id}', [ItemController::class, 'detail'])->name('items.detail');
+Route::get('/item/{item_id}', [ItemController::class, 'showDetail'])->name('items.detail');
 
 // 商品詳細コメント機能
-Route::post('/item/{item_id}/comment', [ItemController::class, 'comment'])->name('items.comment');
+Route::post('/item/{item_id}/comment', [ItemController::class, 'sendComment'])->name('items.comment');
 
 // 商品詳細いいね機能
 Route::post('/item/{item_id}/like', [ItemController::class, 'toggleLike'])->name('items.like.toggle')->middleware(['auth', 'verified']);
 
 // 商品購入関連
 Route::get('/purchase/{item_id}', [PurchaseController::class, 'showPurchase'])->name('items.purchase.show')->middleware(['auth', 'verified']);
-Route::post('/purchase/{item_id}', [PurchaseController::class, 'purchase'])->name('items.purchase')->middleware(['auth', 'verified']);
+Route::post('/purchase/{item_id}', [PurchaseController::class, 'store'])->name('items.purchase')->middleware(['auth', 'verified']);
 Route::get('/purchase/{item_id}/success', [PurchaseController::class, 'purchaseSuccess'])->name('items.purchase.success')->middleware(['auth', 'verified']);
 
 // 送付先住所関連
 Route::get('/purchase/address/{item_id}', [ShippingController::class, 'showShipping'])->name('shipping.show')->middleware(['auth', 'verified']);
-Route::post('/purchase/address/{item_id}', [ShippingController::class, 'shipping'])->name('shipping.update')->middleware(['auth', 'verified']);
+Route::post('/purchase/address/{item_id}', [ShippingController::class, 'changeShipping'])->name('shipping.update')->middleware(['auth', 'verified']);
 
 // 商品出品関連
-Route::get('/sell', [ListingController::class, 'showCreate'])->name('items.create.show')->middleware(['auth', 'verified']);
-Route::post('/sell', [ListingController::class, 'create'])->name('items.create')->middleware(['auth', 'verified']);
+Route::get('/sell', [ListingController::class, 'showListing'])->name('items.create.show')->middleware(['auth', 'verified']);
+Route::post('/sell', [ListingController::class, 'createListing'])->name('items.create')->middleware(['auth', 'verified']);
 
 // 認証関連
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
@@ -53,12 +53,12 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 // メール認証関連
 Route::get('/email/verify', [AuthController::class, 'showVerificationNotice'])->name('verification.notice');
 Route::post('/email/verification-notification', [AuthController::class, 'resendVerificationEmail'])->name('verification.resend');
-Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verify'])->name('verification.verify')->middleware('signed');
+Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verification.verify')->middleware('signed');
 
 // ユーザー関連
-Route::get('/mypage', [UserController::class, 'profile'])->name('user.profile')->middleware(['auth', 'verified']);
-Route::get('/mypage/profile', [UserController::class, 'edit'])->name('user.edit')->middleware(['auth', 'verified']);
-Route::post('/mypage/profile', [UserController::class, 'update'])->name('user.update')->middleware(['auth', 'verified']);
+Route::get('/mypage', [UserController::class, 'showProfile'])->name('user.profile')->middleware(['auth', 'verified']);
+Route::get('/mypage/profile', [UserController::class, 'editProfile'])->name('user.edit')->middleware(['auth', 'verified']);
+Route::post('/mypage/profile', [UserController::class, 'updateProfile'])->name('user.update')->middleware(['auth', 'verified']);
 
 // Stripe Webhook
 Route::post('/webhook/stripe', [StripeWebhookController::class, 'handle'])->name('webhook.stripe');

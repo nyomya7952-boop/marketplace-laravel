@@ -18,7 +18,7 @@ class SellItemTest extends TestCase
     /**
      * 商品出品画面にて必要な情報が保存できること（カテゴリ、商品の状態、商品名、ブランド名、商品の説明、販売価格）
      */
-    public function test_required_information_can_be_saved_in_sell_item_page()
+    public function testRequiredInformationCanBeSavedInSellItemPage()
     {
         // 1. ユーザーにログインする
         $user = User::factory()->create([

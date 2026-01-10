@@ -15,7 +15,7 @@ class LikeTest extends TestCase
      * いいねアイコンを押下することによって、いいねした商品として登録することができる。
      *
      */
-    public function test_liked_items_are_displayed()
+    public function testLikedItemsAreDisplayed()
     {
         // 1. ログインユーザーを作成
         $user = User::factory()->create([
@@ -63,7 +63,7 @@ class LikeTest extends TestCase
      * いいねアイコンを押下したらアイコンの色が変化することを確認
      *
      */
-    public function test_like_button_changes_color_when_clicked()
+    public function testLikeButtonChangesColorWhenClicked()
     {
         // 1. ログインユーザーを作成
         $user = User::factory()->create([
@@ -103,7 +103,7 @@ class LikeTest extends TestCase
      * 再度いいねアイコンを押下することによって、いいねを解除することができることを確認
      *
      */
-    public function test_like_button_changes_color_when_clicked_again()
+    public function testLikeButtonChangesColorWhenClickedAgain()
     {
        // 1. ログインユーザーを作成
         $user = User::factory()->create([

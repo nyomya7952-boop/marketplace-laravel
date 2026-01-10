@@ -17,7 +17,7 @@ class LogoutTest extends TestCase
      *
      * @return void
      */
-    public function test_successful_logout()
+    public function testSuccessfulLogout()
     {
         // メール認証済みのユーザーを作成
         $user = User::factory()->create([

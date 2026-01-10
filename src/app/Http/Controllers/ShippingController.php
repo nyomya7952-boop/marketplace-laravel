@@ -26,7 +26,7 @@ class ShippingController extends Controller
         ]);
     }
 
-    public function shipping(AddressRequest $request, $item_id)
+    public function changeShipping(AddressRequest $request, $item_id)
     {
         session([
             'shipping_postal_code' => $request->postal_code,

@@ -47,7 +47,11 @@
                     @endguest
                 </li>
                 <li class="header__nav-item">
-                    <a class="header__nav-link" href="{{ route('user.profile') }}">マイページ</a>
+                    @auth
+                        <a class="header__nav-link" href="{{ route('user.profile') }}">マイページ</a>
+                    @else
+                        <a class="header__nav-link" href="{{ route('login') }}">マイページ</a>
+                    @endauth
                 </li>
                 <li class="header__nav-item">
                     @auth
@@ -62,6 +66,7 @@
     </header>
 
     <main>
+        @include('partials.flash')
         @yield('content')
     </main>
     @yield('js')

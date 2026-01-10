@@ -14,7 +14,7 @@ class RegisterTest extends TestCase
     /**
      * 名前が入力されていない場合、バリデーションメッセージが表示される
      */
-    public function test_name_validation_when_empty()
+    public function testNameValidationWhenEmpty()
     {
         $response = $this->get(route('register'));
         $response->assertStatus(200);
@@ -35,7 +35,7 @@ class RegisterTest extends TestCase
     /**
      * メールアドレスが入力されていない場合、バリデーションメッセージが表示される
      */
-    public function test_email_validation_when_empty()
+    public function testEmailValidationWhenEmpty()
     {
         $response = $this->get(route('register'));
         $response->assertStatus(200);
@@ -56,7 +56,7 @@ class RegisterTest extends TestCase
     /**
      * パスワードが入力されていない場合、バリデーションメッセージが表示される
      */
-    public function test_password_validation_when_empty()
+    public function testPasswordValidationWhenEmpty()
     {
         $response = $this->get(route('register'));
         $response->assertStatus(200);
@@ -77,7 +77,7 @@ class RegisterTest extends TestCase
     /**
      * パスワードが7文字以下の場合、バリデーションメッセージが表示される
      */
-    public function test_password_validation_when_less_than_8_characters()
+    public function testPasswordValidationWhenLessThan8Characters()
     {
         $response = $this->get(route('register'));
         $response->assertStatus(200);
@@ -98,7 +98,7 @@ class RegisterTest extends TestCase
     /**
      * パスワードが確認用パスワードと一致しない場合、バリデーションメッセージが表示される
      */
-    public function test_password_confirmation_validation_when_mismatch()
+    public function testPasswordConfirmationValidationWhenMismatch()
     {
         $response = $this->get(route('register'));
         $response->assertStatus(200);
@@ -119,7 +119,7 @@ class RegisterTest extends TestCase
     /**
      * 全ての項目が入力されている場合、会員情報が登録され、メール認証画面に遷移される
      */
-    public function test_successful_registration_redirects_to_verification_notice()
+    public function testSuccessfulRegistrationRedirectsToVerificationNotice()
     {
         $response = $this->get(route('register'));
         $response->assertStatus(200);

@@ -98,3 +98,40 @@
 .header__nav-button:hover {
     background-color: #f0f0f0;
 }
+
+/* Flash messages (session error/success) */
+.flash {
+    max-width: 1230px;
+    margin: 12px auto 0;
+    padding: 0 15px;
+}
+
+.flash__alert {
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.4;
+    border: 1px solid transparent;
+    margin-bottom: 12px;
+}
+
+.flash__alert--error {
+    background: #ffe6e6;
+    color: #b00020;
+    border-color: #f5c2c7;
+}
+
+.flash__alert--success {
+    background: #e6ffed;
+    color: #0f5132;
+    border-color: #badbcc;
+}
+
+.flash__list {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.flash__list-item {
+    margin: 4px 0;
+}

@@ -25,7 +25,7 @@ class ItemDetailTest extends TestCase
      *
      * @return void
      */
-    public function test_required_information_is_displayed()
+    public function testRequiredInformationIsDisplayed()
     {
         // 1. テストデータを作成
         $seller = User::factory()->create([
@@ -119,7 +119,7 @@ class ItemDetailTest extends TestCase
      *
      * @return void
      */
-    public function test_multiple_selected_categories_are_displayed()
+    public function testMultipleSelectedCategoriesAreDisplayed()
     {
         // 1. テストデータを作成
         $seller = User::factory()->create([

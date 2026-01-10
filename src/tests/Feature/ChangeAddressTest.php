@@ -18,7 +18,7 @@ class ChangeAddressTest extends TestCase
     /**
      * 送付先住所変更画面にて登録した住所が商品購入画面に反映されている
      */
-    public function test_shipping_address_reflected_in_purchase_page()
+    public function testShippingAddressReflectedInPurchasePage()
     {
         // 1. ユーザーにログインする
         $user = User::factory()->create([
@@ -69,7 +69,7 @@ class ChangeAddressTest extends TestCase
     /**
      * 購入した商品に送付先住所が紐づいて登録される
      */
-    public function test_shipping_address_saved_with_purchase()
+    public function testShippingAddressSavedWithPurchase()
     {
         // 1. ユーザーにログインする
         $user = User::factory()->create([

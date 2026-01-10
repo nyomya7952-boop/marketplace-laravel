@@ -12,7 +12,7 @@ use App\Http\Requests\ProfileRequest;
 
 class UserController extends Controller
 {
-    public function profile(Request $request)
+    public function showProfile(Request $request)
     {
         $user = Auth::user();
 
@@ -38,9 +38,11 @@ class UserController extends Controller
         ]);
     }
 
-    public function edit()
+    public function editProfile()
     {
         $user = Auth::user();
+
+        // 認証されていない場合はログイン画面へリダイレクト
         if (!$user) {
             return redirect()->route('login');
         }
@@ -50,9 +52,11 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(ProfileRequest $request)
+    public function updateProfile(ProfileRequest $request)
     {
         $user = Auth::user();
+
+        // 認証されていない場合はログイン画面へリダイレクト
         if (!$user) {
             return redirect()->route('login');
         }

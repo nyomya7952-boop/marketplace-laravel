@@ -17,7 +17,7 @@ class CommentTest extends TestCase
      *
      * @return void
      */
-    public function test_logged_in_users_can_send_comments()
+    public function testLoggedInUsersCanSendComments()
     {
         // 1. テストデータを作成
         $seller = User::factory()->create([
@@ -48,7 +48,7 @@ class CommentTest extends TestCase
      *
      * @return void
      */
-    public function test_unlogged_in_users_cannot_send_comments()
+    public function testUnloggedInUsersCannotSendComments()
     {
         // 1. テストデータを作成
         $seller = User::factory()->create([
@@ -103,7 +103,7 @@ class CommentTest extends TestCase
      *
      * @return void
      */
-    public function test_comment_content_should_be_required()
+    public function testCommentContentShouldBeRequired()
     {
         // 1. テストデータを作成
         $seller = User::factory()->create([
@@ -154,7 +154,7 @@ class CommentTest extends TestCase
      *
      * @return void
      */
-    public function test_comment_content_should_be_less_than_255_characters()
+    public function testCommentContentShouldBeLessThan255Characters()
     {
         // 1. テストデータを作成
         $seller = User::factory()->create([

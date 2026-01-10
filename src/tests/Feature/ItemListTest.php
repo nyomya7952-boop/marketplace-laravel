@@ -17,7 +17,7 @@ class ItemListTest extends TestCase
      *
      * @return void
      */
-    public function test_get_all_items()
+    public function testGetAllItems()
     {
         // 1. 複数の出品者を作成
         $seller1 = User::factory()->create([
@@ -61,7 +61,7 @@ class ItemListTest extends TestCase
      *
      * @return void
      */
-    public function test_sold_items_are_displayed_as_sold()
+    public function testSoldItemsAreDisplayedAsSold()
     {
         // 1. 出品者を作成
         $seller = User::factory()->create([
@@ -93,7 +93,7 @@ class ItemListTest extends TestCase
      *
      * @return void
      */
-    public function test_items_sold_by_the_user_are_not_displayed()
+    public function testItemsSoldByTheUserAreNotDisplayed()
     {
         // 1. ログインユーザーを作成
         $user = User::factory()->create([

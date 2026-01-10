@@ -17,7 +17,7 @@ class MyListTest extends TestCase
      *
      * @return void
      */
-    public function test_liked_items_are_displayed()
+    public function testLikedItemsAreDisplayed()
     {
         // 1. ログインユーザーを作成
         $user = User::factory()->create([
@@ -67,7 +67,7 @@ class MyListTest extends TestCase
      *
      * @return void
      */
-    public function test_sold_items_are_displayed_as_sold_in_mylist()
+    public function testSoldItemsAreDisplayedAsSoldInMylist()
     {
         // 1. 出品者を作成
         $seller = User::factory()->create([
@@ -109,7 +109,7 @@ class MyListTest extends TestCase
      *
      * @return void
      */
-    public function test_unauthenticated_users_get_empty_collection()
+    public function testUnauthenticatedUsersGetEmptyCollection()
     {
         // 1. 商品を作成（未認証ユーザーには表示されないべき）
         $seller = User::factory()->create([

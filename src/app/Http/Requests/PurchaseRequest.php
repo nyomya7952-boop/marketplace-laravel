@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 
 class PurchaseRequest extends FormRequest
 {
@@ -34,7 +35,27 @@ class PurchaseRequest extends FormRequest
     {
         return [
             'payment_method_id.required' => '支払方法を選択してください',
+            'shipping' => '配送先を設定してください',
         ];
+    }
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param  \Illuminate\Contracts\Validation\Validator  $validator
+     * @return void
+     */
+    public function withValidator(Validator $validator)
+    {
+        $validator->after(function ($validator) {
+            $user = Auth::user();
+            $postalCode = session('shipping_postal_code', $user->postal_code);
+            $address = session('shipping_address', $user->address);
+
+            if (empty($postalCode) || $postalCode === '000' || empty($address) || $address === '住所未設定') {
+                $validator->errors()->add('shipping', '配送先を設定してください');
+            }
+        });
     }
 
     /**

@@ -18,7 +18,7 @@ class PaymentMethodTest extends TestCase
      *
      * @return void
      */
-    public function test_selected_payment_method_is_displayed_in_summary_page()
+    public function testSelectedPaymentMethodIsDisplayedInSummaryPage()
     {
         // 1. テストデータを作成
         $user = User::factory()->create([
