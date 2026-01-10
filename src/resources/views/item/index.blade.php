@@ -6,13 +6,6 @@
 
 @section('content')
 <div class="items__content">
-    @if(session('error'))
-        <div class="items__alert items__alert--error">{{ session('error') }}</div>
-    @endif
-    @if(session('success'))
-        <div class="items__alert items__alert--success">{{ session('success') }}</div>
-    @endif
-
     <!-- タブセクション -->
     <div class="items__tabs">
         <a href="{{ route('items.index', array_merge(['tab' => 'recommended'], request('search') ? ['search' => request('search')] : [])) }}" class="items__tab {{ $activeTab === 'recommended' ? 'items__tab--active' : '' }}">

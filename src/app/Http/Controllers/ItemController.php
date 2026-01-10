@@ -58,7 +58,7 @@ class ItemController extends Controller
         ]);
     }
 
-    public function detail($item_id)
+    public function showDetail($item_id)
     {
         $item = Item::with(['brand', 'categories', 'comments.user', 'likes'])
             ->findOrFail($item_id);
@@ -84,7 +84,7 @@ class ItemController extends Controller
         ]);
     }
 
-    public function comment(CommentRequest $request, $item_id)
+    public function sendComment(CommentRequest $request, $item_id)
     {
         // 未ログインの場合はバリデーションエラーとして返す
         if (!Auth::check()) {

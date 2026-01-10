@@ -16,7 +16,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // 10秒待機してから処理を実行
+    // 5秒待機してから処理を実行
     setTimeout(function() {
         // 新しいタブから開かれた場合（window.openerが存在する場合）
         if (window.opener && !window.opener.closed) {

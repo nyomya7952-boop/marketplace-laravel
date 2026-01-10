@@ -4,25 +4,6 @@
     padding: 40px 15px;
 }
 
-.purchase__alert {
-    padding: 15px;
-    border-radius: 4px;
-    margin-bottom: 20px;
-    font-size: 16px;
-}
-
-.purchase__alert--error {
-    background-color: #fee;
-    color: #c33;
-    border: 1px solid #fcc;
-}
-
-.purchase__alert--success {
-    background-color: #efe;
-    color: #3c3;
-    border: 1px solid #cfc;
-}
-
 .purchase__main {
     display: grid;
     grid-template-columns: 1fr 400px;

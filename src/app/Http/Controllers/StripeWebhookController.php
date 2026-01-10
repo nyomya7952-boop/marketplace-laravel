@@ -29,11 +29,11 @@ class StripeWebhookController extends Controller
         \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
         $payload = $request->getContent();
-        $sig_header = $request->header('Stripe-Signature');
-        $endpoint_secret = config('services.stripe.webhook_secret');
+        $sigHeader = $request->header('Stripe-Signature');
+        $endpointSecret = config('services.stripe.webhook_secret');
 
         // Webhookシークレットが設定されていない場合のエラーチェック
-        if (empty($endpoint_secret)) {
+        if (empty($endpointSecret)) {
             Log::error('Stripe Webhook: Webhook secret is not configured', [
                 'config_value' => config('services.stripe.webhook_secret'),
                 'env_value' => env('STRIPE_WEBHOOK_SECRET')
@@ -44,8 +44,8 @@ class StripeWebhookController extends Controller
         try {
             $event = \Stripe\Webhook::constructEvent(
                 $payload,
-                $sig_header,
-                $endpoint_secret
+                $sigHeader,
+                $endpointSecret
             );
         } catch (\UnexpectedValueException $e) {
             Log::error('Stripe Webhook: Invalid payload', ['error' => $e->getMessage()]);
@@ -53,38 +53,20 @@ class StripeWebhookController extends Controller
         } catch (\Stripe\Exception\SignatureVerificationException $e) {
             Log::error('Stripe Webhook: Invalid signature', [
                 'error' => $e->getMessage(),
-                'has_signature_header' => !empty($sig_header),
-                'has_webhook_secret' => !empty($endpoint_secret)
+                'has_signature_header' => !empty($sigHeader),
+                'has_webhook_secret' => !empty($endpointSecret)
             ]);
             return response()->json(['error' => 'Invalid signature'], 400);
         }
 
-        // checkout.session.completedイベントを処理（カード支払い用）
-        if ($event->type === 'checkout.session.completed') {
-            $session = $event->data->object;
-            $this->handleCheckoutSessionCompleted($session);
-        }
-
         // checkout.session.async_payment_succeededイベントを処理（コンビニ支払いの入金完了時）
+        //カード支払いの処理は purchaseSuccess メソッドで行われるため、ここでは何もしない
         if ($event->type === 'checkout.session.async_payment_succeeded') {
             $session = $event->data->object;
             $this->handleAsyncPaymentSucceeded($session);
         }
 
         return response()->json(['received' => true]);
-    }
-
-    /**
-     * checkout.session.completedイベントを処理（カード支払い用）
-     *
-     * @param \Stripe\Checkout\Session $session
-     * @return void
-     */
-    private function handleCheckoutSessionCompleted($session)
-    {
-        // カード支払いの場合は、payment_statusがpaidの時点で完了している
-        // コンビニ支払いの場合は、この時点では入金待ちなので処理しない
-        // カード支払いの処理は purchaseSuccess メソッドで行われるため、ここでは何もしない
     }
 
     /**
@@ -98,49 +80,9 @@ class StripeWebhookController extends Controller
         // セッションIDからSoldItemを検索
         $soldItem = SoldItem::where('stripe_session_id', $session->id)->first();
 
-        // セッションIDが見つからない場合のフォールバック処理
-        // （テストイベントや、何らかの理由でセッションIDが一致しない場合）
+        // セッションIDが見つからない場合はエラー
         if (!$soldItem) {
-            // コンビニ支払いのpayment_method_idを取得
-            $konbiniPaymentMethod = MasterData::where('type', 'payment_method')
-                ->where('name', 'コンビニ支払い')
-                ->first();
-
-            if (!$konbiniPaymentMethod) {
-                Log::error('Stripe Webhook: Konbini payment method not found');
-                return;
-            }
-
-            // 入金待ちの商品を取得（コンビニ支払いのみ）
-            $pendingSoldItems = SoldItem::where('payment_method_id', $konbiniPaymentMethod->id)
-                ->whereHas('item', function($query) {
-                    $query->where('is_sold', 'pending');
-                })
-                ->with('item')
-                ->get();
-
-            if ($pendingSoldItems->isEmpty()) {
-                Log::warning('Stripe Webhook: No pending items found for session', [
-                    'session_id' => $session->id
-                ]);
-                return;
-            }
-
-            // 最初の入金待ち商品を購入済みに更新
-            $soldItem = $pendingSoldItems->first();
-            $item = $soldItem->item;
-
-            if (!$item) {
-                Log::error('Stripe Webhook: Item not found for sold_item', [
-                    'sold_item_id' => $soldItem->id,
-                    'item_id' => $soldItem->item_id
-                ]);
-                return;
-            }
-
-            $item->update(['is_sold' => 'sold']);
-            Log::info('Stripe Webhook: Payment completed for item', [
-                'item_id' => $item->id,
+            Log::error('Stripe Webhook: SoldItem not found for session', [
                 'session_id' => $session->id
             ]);
             return;

@@ -17,7 +17,7 @@ class GetProfileTest extends TestCase
     /**
      * 必要な情報が取得できる（プロフィール画像、ユーザー名、出品した商品一覧、購入した商品一覧）
      */
-    public function test_profile_page_displays_all_required_information()
+    public function testProfilePageDisplaysAllRequiredInformation()
     {
         // 1. ユーザーにログインする
         $user = User::factory()->create([

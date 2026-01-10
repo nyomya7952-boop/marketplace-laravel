@@ -16,7 +16,7 @@ class PurchaseTest extends TestCase
     /**
      * 「購入する」ボタンを押下すると購入が完了する(コンビニ支払いの場合)
      */
-    public function test_successful_purchase_with_convenience_payment()
+    public function testSuccessfulPurchaseWithConveniencePayment()
     {
         // 1. テストデータを作成
         $user = User::factory()->create([
@@ -109,7 +109,7 @@ class PurchaseTest extends TestCase
     /**
      * 「購入する」ボタンを押下すると購入が完了する(カード支払いの場合)
      */
-    public function test_successful_purchase_with_card_payment()
+    public function testSuccessfulPurchaseWithCardPayment()
     {
         // 1. テストデータを作成
         $user = User::factory()->create([
@@ -201,7 +201,7 @@ class PurchaseTest extends TestCase
     /**
      * 購入した商品は商品一覧画面にて「sold」と表示される
      */
-    public function test_successful_purchase_is_displayed_as_sold_in_item_list()
+    public function testSuccessfulPurchaseIsDisplayedAsSoldInItemList()
     {
         // 1. テストデータを作成
         $user = User::factory()->create([
@@ -304,7 +304,7 @@ class PurchaseTest extends TestCase
     /**
      * 「プロフィール/購入した商品一覧」に追加されている
      */
-    public function test_successful_purchase_is_displayed_in_my_purchase_list()
+    public function testSuccessfulPurchaseIsDisplayedInMyPurchaseList()
     {
         // 1. テストデータを作成
         $user = User::factory()->create([

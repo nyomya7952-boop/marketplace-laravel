@@ -11,25 +11,16 @@ use App\Http\Requests\RegisterRequest;
 
 class AuthController extends Controller
 {
-    /**
-     * ログイン画面表示
-     */
     public function login()
     {
         return view('auth.login');
     }
 
-    /**
-     * 会員登録画面表示
-     */
     public function showRegister()
     {
         return view('auth.register');
     }
 
-    /**
-     * 会員登録処理
-     */
     public function register(RegisterRequest $request)
     {
         $user = User::create([
@@ -50,29 +41,21 @@ class AuthController extends Controller
         return redirect()->route('verification.notice');
     }
 
-    /**
-     * ログアウト処理
-     */
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
+        // ログアウト後はログイン画面にリダイレクト
         return redirect()->route('login');
     }
 
-    /**
-     * メール認証誘導画面
-     */
     public function showVerificationNotice()
     {
         return view('auth.verify-email-notice');
     }
 
-    /**
-     * 認証メール再送信
-     */
     public function resendVerificationEmail(Request $request)
     {
         // ログインしている場合はユーザーを取得、していない場合はセッションからメールアドレスを取得
@@ -100,10 +83,7 @@ class AuthController extends Controller
         return back()->with('message', '認証メールを再送信しました');
     }
 
-    /**
-     * メール認証処理
-     */
-    public function verify(Request $request, $id, $hash)
+    public function verifyEmail(Request $request, $id, $hash)
     {
         $user = User::findOrFail($id);
 
@@ -116,21 +96,21 @@ class AuthController extends Controller
             if (!Auth::check()) {
                 Auth::login($user);
             }
-            // セッションからメールアドレスを削除
+            // セッションからメールアドレスを削除し、プロフィール編集画面にリダイレクト
             $request->session()->forget('verification_email');
             return redirect()->route('user.edit');
         }
 
         if ($user->markEmailAsVerified()) {
+            // メール認証完了イベントを発行
             event(new Verified($user));
         }
 
         // メール認証完了後、ログイン状態にする
         Auth::login($user);
 
-        // セッションからメールアドレスを削除
+        // セッションからメールアドレスを削除し、プロフィール編集画面にリダイレクト
         $request->session()->forget('verification_email');
-
-        return redirect()->route('user.edit')->with('verified', true);
+        return redirect()->route('user.edit');
     }
 }

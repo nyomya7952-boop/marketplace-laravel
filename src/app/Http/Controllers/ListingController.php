@@ -13,7 +13,7 @@ use App\Http\Requests\ExhibitionRequest;
 
 class ListingController extends Controller
 {
-    public function showCreate()
+    public function showListing()
     {
         $categories = Category::all();
         $conditions = MasterData::where('type', 'condition')->get();
@@ -24,7 +24,7 @@ class ListingController extends Controller
         ]);
     }
 
-    public function create(ExhibitionRequest $request)
+    public function createListing(ExhibitionRequest $request)
     {
         DB::beginTransaction();
         try {

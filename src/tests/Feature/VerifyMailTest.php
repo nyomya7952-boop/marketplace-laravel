@@ -15,7 +15,7 @@ class VerifyMailTest extends TestCase
     /**
      * 会員登録後、認証メールが送信される
      */
-    public function test_successful_registration_sends_verification_email()
+    public function testSuccessfulRegistrationSendsVerificationEmail()
     {
         // 通知をモック
         Notification::fake();
@@ -48,7 +48,7 @@ class VerifyMailTest extends TestCase
     /**
      * メール認証誘導画面で「認証はこちらから」ボタンを押下するとメール認証サイトに遷移する
      */
-    public function test_verification_notice_has_link_to_mail_site()
+    public function testVerificationNoticeHasLinkToMailSite()
     {
         // 1. 会員登録する
         $userData = [
@@ -76,7 +76,7 @@ class VerifyMailTest extends TestCase
     /**
      * メール認証サイトのメール認証を完了すると、プロフィール設定画面に遷移する
      */
-    public function test_email_verification_redirects_to_profile_setting()
+    public function testEmailVerificationRedirectsToProfileSetting()
     {
         // 1. 会員登録する
         $userData = [

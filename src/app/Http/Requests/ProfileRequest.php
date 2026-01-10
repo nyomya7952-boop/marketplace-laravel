@@ -27,7 +27,7 @@ class ProfileRequest extends FormRequest
             'name' => 'required|max:20',
             'postal_code' => 'required|regex:/^\d{3}-\d{4}$/',
             'address' => 'required',
-            'profile_image_path' => 'nullable|image|mimetypes:image/jpeg,image/png',
+            'profile_image_path' => 'nullable|mimes:jpeg,png',
         ];
     }
 
@@ -39,8 +39,7 @@ class ProfileRequest extends FormRequest
             'postal_code.required' => '郵便番号を入力してください',
             'postal_code.regex' => '郵便番号は3桁-4桁の形式で入力してください',
             'address.required' => '住所を入力してください',
-            'profile_image_path.image' => '画像ファイルを選択してください',
-            'profile_image_path.mimetypes' => '画像はjpeg,png形式で選択してください',
+            'profile_image_path.mimes' => '画像はjpeg,png形式で選択してください',
         ];
     }
 }

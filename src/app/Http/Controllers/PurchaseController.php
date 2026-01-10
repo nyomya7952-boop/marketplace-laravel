@@ -75,7 +75,7 @@ class PurchaseController extends Controller
         return null;
     }
 
-    public function purchase(PurchaseRequest $request, $item_id)
+    public function store(PurchaseRequest $request, $item_id)
     {
         $item = Item::findOrFail($item_id);
 
@@ -86,15 +86,6 @@ class PurchaseController extends Controller
         }
 
         $shippingInfo = $this->getShippingInfo();
-
-        // 配送先が設定されているかチェック
-        if (empty($shippingInfo['postal_code']) || $shippingInfo['postal_code'] === '000' || empty($shippingInfo['address']) || $shippingInfo['address'] === '住所未設定') {
-            if ($request->expectsJson()) {
-                return response()->json(['success' => false, 'message' => '配送先を設定してください'], 400);
-            }
-            return redirect()->route('items.purchase.show', ['item_id' => $item_id])
-                ->with('error', '配送先を設定してください');
-        }
 
         $paymentMethod = MasterData::findOrFail($request->payment_method_id);
 
@@ -163,6 +154,7 @@ class PurchaseController extends Controller
 
     public function purchaseSuccess(Request $request, $item_id)
     {
+        // カード払いの場合に表示される成功画面
         $sessionId = $request->get('session_id');
         $pendingPurchase = session('pending_purchase');
 
@@ -173,15 +165,6 @@ class PurchaseController extends Controller
 
         try {
             $session = $this->stripeService->retrieveCheckoutSession($sessionId);
-            $paymentMethod = MasterData::find($pendingPurchase['payment_method_id']);
-            $isKonbini = $paymentMethod && $paymentMethod->name === 'コンビニ支払い';
-
-            // コンビニ支払いの場合は既に入金待ち状態なので、成功ページを表示するだけ
-            if ($isKonbini) {
-                $this->purchaseService->clearPurchaseSession();
-                return view('item.purchase-success');
-            }
-
             // カード支払いの場合は決済完了を確認してから購入処理
             if ($session->payment_status === 'paid') {
                 $this->purchaseService->completePurchase($item_id, $pendingPurchase, $sessionId);

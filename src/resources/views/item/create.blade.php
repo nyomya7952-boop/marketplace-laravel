@@ -8,13 +8,6 @@
 <div class="create__content">
     <h1 class="create__title">商品の出品</h1>
 
-    @if(session('error'))
-        <div class="create__alert create__alert--error">{{ session('error') }}</div>
-    @endif
-    @if(session('success'))
-        <div class="create__alert create__alert--success">{{ session('success') }}</div>
-    @endif
-
     <form action="{{ route('items.create') }}" method="post" enctype="multipart/form-data" class="create__form" novalidate>
         @csrf
 
@@ -122,7 +115,9 @@
         </div>
     </form>
 </div>
+@endsection
 
+@section('js')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const imageInput = document.getElementById('image');

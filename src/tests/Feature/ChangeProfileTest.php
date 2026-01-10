@@ -14,7 +14,7 @@ class ChangeProfileTest extends TestCase
     /**
      * プロフィール変更画面で初期値が正しく設定されていること
      */
-    public function test_initial_values_are_correctly_set_in_profile_edit_page()
+    public function testInitialValuesAreCorrectlySetInProfileEditPage()
     {
         // 1. ユーザーにログインする
         $user = User::factory()->create([

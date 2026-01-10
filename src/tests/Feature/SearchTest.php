@@ -17,7 +17,7 @@ class SearchTest extends TestCase
     /**
      * 「商品名」で部分一致検索ができる
      */
-    public function test_search_by_item_name_partial_match()
+    public function testSearchByItemNamePartialMatch()
     {
         // テスト用のユーザーとマスタデータを作成
         $user = User::factory()->create([
@@ -74,7 +74,7 @@ class SearchTest extends TestCase
     /**
      * 検索状態がマイリストでも保持されている
      */
-    public function test_search_state_preserved_in_mylist()
+    public function testSearchStatePreservedInMylist()
     {
         // テスト用のユーザーとマスタデータを作成
         $user = User::factory()->create([

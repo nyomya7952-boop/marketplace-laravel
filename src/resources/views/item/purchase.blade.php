@@ -6,13 +6,6 @@
 
 @section('content')
 <div class="purchase__content">
-    @if(session('error'))
-        <div class="purchase__alert purchase__alert--error">{{ session('error') }}</div>
-    @endif
-    @if(session('success'))
-        <div class="purchase__alert purchase__alert--success">{{ session('success') }}</div>
-    @endif
-
     <div class="purchase__main">
         <!-- 左側：商品情報と入力フィールド -->
         <div class="purchase__left">
@@ -64,7 +57,11 @@
                     </div>
                     <a href="{{ route('shipping.show', ['item_id' => $item->id]) }}" class="purchase__change-link">変更する</a>
                 </div>
-                <div class="purchase__error" id="shipping-error"></div>
+                <div class="purchase__error" id="shipping-error">
+                    @error('shipping')
+                    {{ $message }}
+                    @enderror
+                </div>
                 <div class="purchase__divider"></div>
             </div>
         </div>
@@ -197,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
 
                     // カード支払いの場合、Stripe画面が閉じられたかどうかを監視
-                    // ただし、決済完了メッセージを受け取った場合は処理しない
+                    // ただし、決済完了した場合は処理しない
                     const checkClosed = setInterval(function() {
                         if (stripeWindow && stripeWindow.closed) {
                             clearInterval(checkClosed);
@@ -226,9 +223,20 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => {
                 console.error('Error:', error);
 
-                // バリデーションエラーの場合（支払い方法のエラー）
+                // バリデーションエラーの場合
                 if (error.isValidationError && error.data) {
-                    showPaymentError(error.data.message || '入力内容に誤りがあります');
+                    // 配送先エラーがある場合は配送先エラーとして表示
+                    if (error.data.errors && error.data.errors.shipping) {
+                        showShippingError(error.data.errors.shipping[0] || '配送先を設定してください');
+                    }
+                    // 支払い方法のエラーがある場合は支払い方法エラーとして表示
+                    if (error.data.errors && error.data.errors.payment_method_id) {
+                        showPaymentError(error.data.errors.payment_method_id[0] || '支払方法を選択してください');
+                    }
+                    // どちらのエラーもない場合（予期しないエラー）
+                    if (!error.data.errors || (!error.data.errors.shipping && !error.data.errors.payment_method_id)) {
+                        showPaymentError(error.data.message || '入力内容に誤りがあります');
+                    }
                 } else {
                     showPaymentError('エラーが発生しました');
                 }
