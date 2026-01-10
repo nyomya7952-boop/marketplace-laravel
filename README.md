@@ -21,9 +21,9 @@ Laravel を使用したマーケットプレイスアプリケーションです
 ### 前提条件
 
 - Docker Desktop (または Docker Engine + Docker Compose) がインストールされていること。
-- Stripe アカウント（テストモード）が作成済みであること
-  - ※ 本プロジェクトでは Stripe のテストモードを使用します。
-  - ※ 詳細は 6 章を確認してください。
+- Stripe アカウント（テストモード）が作成済みであること  
+  ※ 本プロジェクトでは Stripe のテストモードを使用します。  
+  ※ 詳細は「Stripe テスト手順」を確認してください。
 
 ### 構築ステップ
 
@@ -72,7 +72,7 @@ Laravel を使用したマーケットプレイスアプリケーションです
    ```ini
    //　Stripe設定
    // ※ 値は各自のStripeダッシュボード（テストモード）/ Stripe CLIの出力から取得してください
-   // ※ 詳細は「Stripe テスト方法」を確認してください
+   // ※ 詳細は「Stripe テスト手順」を確認してください
    STRIPE_SECRET=sk_test_xxxxxxxxxxxxxxxxxxxxx
    STRIPE_PUBLIC_KEY=pk_test_xxxxxxxxxxxxxxxxxxxxx
    STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxx
@@ -121,12 +121,11 @@ Laravel を使用したマーケットプレイスアプリケーションです
    - **アプリケーション**: [http://localhost](http://localhost)
    - **phpMyAdmin**: [http://localhost:8080](http://localhost:8080)
 
-### Stripe テスト方法
+## Stripe テスト手順
+
+### Stripe CLI のインストール
 
 Stripe Webhook をテストするために、Stripe CLI を使用します。
-
-**Stripe CLI のインストール**
-
 Stripe CLI がインストールされていない場合は、以下の手順でインストールします。
 
 **Linux (Ubuntu/Debian):**
@@ -176,15 +175,17 @@ stripe login
 
 このコマンドを実行すると、ブラウザが開き、Stripe アカウントへの認証が求められます。認証が完了すると、CLI が自動的に認証情報を保存します。
 
-### Webhook エンドポイントについて
+### Webhook のテスト
 
-本プロジェクトでは、Stripe の Webhook を以下の URL で受信します。
-この URL は Laravel アプリケーション内で Webhook 受信用として定義されています。
+本プロジェクトでは、Stripe の Webhook を以下の URL で受信します。  
+この URL は Laravel アプリケーション内で Webhook 受信用として定義されています。  
+コンビニ支払いの場合のテストで必要な手順となります。  
+※ 購入時の支払いがコンビニ支払いの場合、Stripe処理中は画面上「入金待ち」の状態となります。  
+※ WebhookによりStripe処理状況を受領次第、「入金待ち」から「購入済み」に変更されます。  
 
-````text
+```text
 http://localhost/webhook/stripe
-
-**Webhook のテスト**
+```
 
 **前提条件**
 
@@ -193,13 +194,14 @@ http://localhost/webhook/stripe
 - Docker コンテナが起動していること（`docker-compose up -d`で起動済み）
 
 **手順**
+
 marketplace-laravel ディレクトリで以下コマンドを実行します。
 
 ```bash
 stripe listen --forward-to http://localhost/webhook/stripe
-````
+```
 
-このコマンドを実行すると、Stripe CLI が Webhook イベントをローカルの`http://localhost/webhook/stripe`に転送します。
+このコマンドを実行すると、Stripe CLI が Webhook イベントをローカルの`http://localhost/webhook/stripe`に転送します。  
 なお、コマンド実行中はターミナルを閉じないでください。
 
 さらに、起動ログに **Webhook signing secret（`whsec_...`）** が表示されるので、表示された値を `src/.env` の `STRIPE_WEBHOOK_SECRET` に設定してください。
