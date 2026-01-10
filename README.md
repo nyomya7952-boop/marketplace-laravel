@@ -47,7 +47,7 @@ Laravel を使用したマーケットプレイスアプリケーションです
 
    `src/.env` をエディタで開き、下記の通り修正します。
 
-   ````ini
+   ```ini
    // データベース設定（`docker-compose.yml` の設定に合わせて修正）
    DB_CONNECTION=mysql
    DB_HOST=mysql
@@ -69,14 +69,14 @@ Laravel を使用したマーケットプレイスアプリケーションです
    MAIL_FROM_NAME="${APP_NAME}"
    ```
 
-    ```ini
+   ```ini
    //　Stripe設定
    // ※ 値は各自のStripeダッシュボード（テストモード）/ Stripe CLIの出力から取得してください
    // ※ 詳細は「Stripe テスト方法」を確認してください
    STRIPE_SECRET=sk_test_xxxxxxxxxxxxxxxxxxxxx
    STRIPE_PUBLIC_KEY=pk_test_xxxxxxxxxxxxxxxxxxxxx
    STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxx
-   ````
+   ```
 
    ※ .env ファイルは Git 管理対象外です。
 
