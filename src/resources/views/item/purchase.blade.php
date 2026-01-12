@@ -85,6 +85,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const flashContainer = document.getElementById('flash-container');
     const paymentSelect = document.getElementById('payment_method');
     const selectedPayment = document.getElementById('selected-payment');
     const purchaseForm = document.getElementById('purchase-form');
@@ -129,6 +130,40 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // flash領域（partials/flash.blade.php）にエラーを表示
+    function showFlashErrors(messages) {
+        if (!flashContainer) return;
+        const listItems = (messages || [])
+            .filter(Boolean)
+            .map(msg => `<li class="flash__list-item">${escapeHtml(msg)}</li>`)
+            .join('');
+        if (!listItems) {
+            flashContainer.innerHTML = '';
+            return;
+        }
+        flashContainer.innerHTML = `
+            <div class="flash__alert flash__alert--error">
+                <ul class="flash__list">
+                    ${listItems}
+                </ul>
+            </div>
+        `;
+    }
+
+    function clearFlash() {
+        if (!flashContainer) return;
+        flashContainer.innerHTML = '';
+    }
+
+    function escapeHtml(str) {
+        return String(str)
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
+    }
+
     paymentSelect.addEventListener('change', function() {
         const selectedId = this.value;
         if (selectedId && paymentMethods[selectedId]) {
@@ -138,6 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         // 選択が変更されたらエラーメッセージをクリア
         clearPaymentError();
+        clearFlash();
     });
 
     // フォーム送信をインターセプトしてAJAXで処理
@@ -157,17 +193,19 @@ document.addEventListener('DOMContentLoaded', function() {
             // エラーメッセージをクリア
             clearPaymentError();
             clearShippingError();
+            clearFlash();
 
             fetch(purchaseForm.action, {
                 method: 'POST',
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                    'Accept': 'application/json'
                 },
                 body: formData
             })
             .then(response => {
-                // バリデーションエラー（422）の場合
+                // バリデーションエラー（422）の場合はJSONを読んでcatchへ
                 if (response.status === 422) {
                     return response.json().then(data => {
                         throw { isValidationError: true, data: data };
@@ -180,6 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // エラーメッセージをクリア
                     clearPaymentError();
                     clearShippingError();
+                    clearFlash();
 
                     // Stripe決済画面を新規タブで開く（コンビニ支払い・カード支払い共通）
                     const stripeWindow = window.open(data.url, '_blank');
@@ -206,14 +245,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }, 1000);
                 } else {
-                    // その他のエラー（配送先エラーなど）
-                    // メッセージに「配送先」が含まれている場合は配送先エラーとして表示
                     const errorMessage = data.message || 'エラーが発生しました';
+                    showFlashErrors([errorMessage]);
+                    // 既存の表示も維持（配送先/支払い方法のどちらかに寄せる）
                     if (errorMessage.includes('配送先')) {
                         showShippingError(errorMessage);
                     } else {
                         showPaymentError(errorMessage);
                     }
+
                     if (submitButton) {
                         submitButton.disabled = false;
                         submitButton.textContent = '購入する';
@@ -225,20 +265,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // バリデーションエラーの場合
                 if (error.isValidationError && error.data) {
-                    // 配送先エラーがある場合は配送先エラーとして表示
+                    const messages = [];
+                    if (error.data.errors) {
+                        Object.values(error.data.errors).forEach(arr => {
+                            if (Array.isArray(arr)) {
+                                arr.forEach(m => messages.push(m));
+                            }
+                        });
+                    }
+                    if (messages.length === 0 && error.data.message) {
+                        messages.push(error.data.message);
+                    }
+                    showFlashErrors(messages);
+
+                    // 既存の箇所別エラー表示も残す
                     if (error.data.errors && error.data.errors.shipping) {
                         showShippingError(error.data.errors.shipping[0] || '配送先を設定してください');
                     }
-                    // 支払い方法のエラーがある場合は支払い方法エラーとして表示
                     if (error.data.errors && error.data.errors.payment_method_id) {
                         showPaymentError(error.data.errors.payment_method_id[0] || '支払方法を選択してください');
                     }
-                    // どちらのエラーもない場合（予期しないエラー）
-                    if (!error.data.errors || (!error.data.errors.shipping && !error.data.errors.payment_method_id)) {
-                        showPaymentError(error.data.message || '入力内容に誤りがあります');
-                    }
                 } else {
-                    showPaymentError('エラーが発生しました');
+                    showFlashErrors(['エラーが発生しました']);
                 }
 
                 if (submitButton) {

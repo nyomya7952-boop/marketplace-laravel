@@ -121,6 +121,12 @@ Laravel を使用したマーケットプレイスアプリケーションです
    - **アプリケーション**: [http://localhost](http://localhost)
    - **phpMyAdmin**: [http://localhost:8080](http://localhost:8080)
 
+   ※error で画面を開けない場合、下記コマンドを実行してください。
+
+   ```bash
+   sudo chmod -R 777 src/*
+   ```
+
 ## PHPUnit テスト手順
 
 1. **テスト用データベースの作成**
@@ -137,6 +143,8 @@ Laravel を使用したマーケットプレイスアプリケーションです
    ```
 
 2. **設定ファイルの作成**
+
+   php コンテナ上で下記コマンドを実行します。
 
    Linux/Mac:
 
@@ -262,4 +270,11 @@ stripe listen --forward-to http://localhost/webhook/stripe
 このコマンドを実行すると、Stripe CLI が Webhook イベントをローカルの`http://localhost/webhook/stripe`に転送します。  
 なお、コマンド実行中はターミナルを閉じないでください。
 
-さらに、起動ログに **Webhook signing secret（`whsec_...`）** が表示されるので、表示された値を `src/.env` の `STRIPE_WEBHOOK_SECRET` に設定してください。
+さらに、起動ログに **Webhook signing secret（`whsec_...`）** が表示されるので、表示された値を `src/.env` の `STRIPE_WEBHOOK_SECRET` に設定してください。  
+設定後、再ビルドしてください。
+
+```bash
+docker compose down
+docker compose build --no-cache
+docker compose up -d
+```

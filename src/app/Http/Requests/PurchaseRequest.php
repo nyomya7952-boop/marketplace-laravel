@@ -68,16 +68,18 @@ class PurchaseRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
+        // AJAX（expectsJson）の場合はJSONで返す（購入画面のJSがflash領域に描画する）
         if ($this->expectsJson()) {
             throw new HttpResponseException(
                 response()->json([
                     'success' => false,
                     'message' => $validator->errors()->first(),
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ], 422)
             );
         }
 
+        // 通常のフォーム送信はリダイレクトで返す（flash.blade.phpが表示される）
         throw new HttpResponseException(
             redirect()->back()
                 ->withErrors($validator)

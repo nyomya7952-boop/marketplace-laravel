@@ -59,11 +59,21 @@ class StripeWebhookController extends Controller
             return response()->json(['error' => 'Invalid signature'], 400);
         }
 
-        // checkout.session.async_payment_succeededイベントを処理（コンビニ支払いの入金完了時）
-        //カード支払いの処理は purchaseSuccess メソッドで行われるため、ここでは何もしない
-        if ($event->type === 'checkout.session.async_payment_succeeded') {
-            $session = $event->data->object;
-            $this->handleAsyncPaymentSucceeded($session);
+        try {
+            // checkout.session.async_payment_succeededイベントを処理（コンビニ支払いの入金完了時）
+            // カード支払いの処理は purchaseSuccess メソッドで行われるため、ここでは何もしない
+            if ($event->type === 'checkout.session.async_payment_succeeded') {
+                $session = $event->data->object;
+                $this->handleAsyncPaymentSucceeded($session);
+            }
+        } catch (\Throwable $e) {
+            // ここで落ちるとStripe側がリトライし続けるため、原因を必ずログに残す
+            Log::error('Stripe Webhook: Handler failed', [
+                'event_type' => $event->type ?? null,
+                'event_id' => $event->id ?? null,
+                'error' => $e->getMessage(),
+            ]);
+            return response()->json(['error' => 'Webhook handler failed'], 500);
         }
 
         return response()->json(['received' => true]);
@@ -107,7 +117,7 @@ class StripeWebhookController extends Controller
         } else {
             Log::warning('Stripe Webhook: Conditions not met for item', [
                 'item_id' => $item->id,
-                'payment_method' => $paymentMethod->name ?? null,
+                'payment_method' => $paymentMethod?->name,
                 'item_status' => $item->is_sold
             ]);
         }
