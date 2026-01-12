@@ -15,7 +15,7 @@
     <header class="header">
         <div class="header__inner">
             <a class="header__logo" href="/">
-                COACHTECH
+                <img src="{{ asset('images/logo.png') }}" alt="COACHTECH" class="header__logo-image">COACHTECH</img>
             </a>
         </div>
         @php

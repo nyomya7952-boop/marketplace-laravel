@@ -70,7 +70,7 @@ Laravel を使用したマーケットプレイスアプリケーションです
    ```
 
    ```ini
-   //　Stripe設定
+   //　Stripe設定（設定値を追記してください。）
    // ※ 値は各自のStripeダッシュボード（テストモード）/ Stripe CLIの出力から取得してください
    // ※ 詳細は「Stripe テスト手順」を確認してください
    STRIPE_SECRET=sk_test_xxxxxxxxxxxxxxxxxxxxx
