@@ -121,6 +121,64 @@ Laravel を使用したマーケットプレイスアプリケーションです
    - **アプリケーション**: [http://localhost](http://localhost)
    - **phpMyAdmin**: [http://localhost:8080](http://localhost:8080)
 
+## PHPUnit テスト手順
+
+1. **テスト用データベースの作成**
+
+   mysql コンテナ上で下記コマンドを実行します。
+
+   ```bash
+   # 依存ライブラリのインストール
+   mysql -u root -p
+   CREATE DATABASE demo_test;
+
+   # demo_testが作成されていることを確認
+   SHOW DATABASES;
+   ```
+
+2. **設定ファイルの作成**
+
+   Linux/Mac:
+
+   ```bash
+   cp .env .env.testing
+   ```
+
+   `src/.env.testing` をエディタで開き、下記の通り修正します。
+
+   ```ini
+   APP_ENV=test
+   APP_KEY=
+   ```
+
+   ※APP_KEY は空を設定する
+
+   ```ini
+   // データベース設定
+   DB_CONNECTION=mysql_test
+   DB_HOST=mysql
+   DB_PORT=3306
+   DB_DATABASE=demo_test
+   DB_USERNAME=root
+   DB_PASSWORD=root
+   ```
+
+   設定後、下記コマンドを実行します。
+
+   ```bash
+   php artisan key:generate --env=testing
+   php artisan config:clear
+   php artisan migrate --env=testing
+   ```
+
+3. **PHPUnit の実行**
+
+   php コンテナで下記コマンドを実行します。
+
+   ```bash
+   php artisan test
+   ```
+
 ## Stripe テスト手順
 
 ### Stripe CLI のインストール
@@ -180,8 +238,8 @@ stripe login
 本プロジェクトでは、Stripe の Webhook を以下の URL で受信します。  
 この URL は Laravel アプリケーション内で Webhook 受信用として定義されています。  
 コンビニ支払いの場合のテストで必要な手順となります。  
-※ 購入時の支払いがコンビニ支払いの場合、Stripe処理中は画面上「入金待ち」の状態となります。  
-※ WebhookによりStripe処理状況を受領次第、「入金待ち」から「購入済み」に変更されます。  
+※ 購入時の支払いがコンビニ支払いの場合、Stripe 処理中は画面上「入金待ち」の状態となります。  
+※ Webhook により Stripe 処理状況を受領次第、「入金待ち」から「購入済み」に変更されます。
 
 ```text
 http://localhost/webhook/stripe
