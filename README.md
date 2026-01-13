@@ -140,6 +140,13 @@ Laravel を使用したマーケットプレイスアプリケーションです
    src\storage\app\public\items
    ```
 
+   格納後に下記コマンドを実行します。
+
+   ```bash
+   // 格納先
+   php artisan storage:link
+   ```
+
 6. **アプリケーションへのアクセス**
 
    ブラウザで以下の URL にアクセスして確認します。
@@ -294,15 +301,14 @@ stripe listen --forward-to http://localhost/webhook/stripe
 ```
 
 このコマンドを実行すると、Stripe CLI が Webhook イベントをローカルの`http://localhost/webhook/stripe`に転送します。  
- なお、コマンド実行中はターミナルを閉じないでください。
+なお、コマンド実行中はターミナルを閉じないでください。
 
 さらに、起動ログに **Webhook signing secret（`whsec_...`）** が表示されるので、表示された値を `src/.env` の `STRIPE_WEBHOOK_SECRET` に設定してください。  
- 設定後、再ビルドしてください。
+設定後、再ビルドしてください。
 
 ```bash
-docker compose down
-docker compose build --no-cache
-docker compose up -d
+docker compose restart php
+docker compose exec php php artisan config:clear
 ```
 
 ### カード支払いの場合のテスト用クレジットカード情報
