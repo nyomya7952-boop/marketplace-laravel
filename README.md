@@ -267,13 +267,13 @@ stripe login
 
 このコマンドを実行すると、ブラウザが開き、Stripe アカウントへの認証が求められます。認証が完了すると、CLI が自動的に認証情報を保存します。
 
-### Webhook のテスト
+### コンビニ支払いのための Webhook のテスト
 
 本プロジェクトでは、Stripe の Webhook を以下の URL で受信します。  
-この URL は Laravel アプリケーション内で Webhook 受信用として定義されています。  
-コンビニ支払いの場合のテストで必要な手順となります。  
-※ 購入時の支払いがコンビニ支払いの場合、Stripe 処理中は画面上「入金待ち」の状態となります。  
-※ Webhook により Stripe 処理状況を受領次第、「入金待ち」から「購入済み」に変更されます。
+ この URL は Laravel アプリケーション内で Webhook 受信用として定義されています。  
+ コンビニ支払いの場合のテストで必要な手順となります。  
+ ※ 購入時の支払いがコンビニ支払いの場合、Stripe 処理中は画面上「入金待ち」の状態となります。  
+ ※ Webhook により Stripe 処理状況を受領次第、「入金待ち」から「購入済み」に変更されます。
 
 ```text
 http://localhost/webhook/stripe
@@ -294,13 +294,21 @@ stripe listen --forward-to http://localhost/webhook/stripe
 ```
 
 このコマンドを実行すると、Stripe CLI が Webhook イベントをローカルの`http://localhost/webhook/stripe`に転送します。  
-なお、コマンド実行中はターミナルを閉じないでください。
+ なお、コマンド実行中はターミナルを閉じないでください。
 
 さらに、起動ログに **Webhook signing secret（`whsec_...`）** が表示されるので、表示された値を `src/.env` の `STRIPE_WEBHOOK_SECRET` に設定してください。  
-設定後、再ビルドしてください。
+ 設定後、再ビルドしてください。
 
 ```bash
 docker compose down
 docker compose build --no-cache
 docker compose up -d
+```
+
+### カード支払いの場合のテスト用クレジットカード情報
+
+テストで利用するクレジットカードは下記 URL に記載しています。
+
+```text
+https://docs.stripe.com/testing?locale=ja-JP
 ```
