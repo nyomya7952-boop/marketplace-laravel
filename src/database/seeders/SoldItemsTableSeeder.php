@@ -21,14 +21,6 @@ class SoldItemsTableSeeder extends Seeder
 
         $rows = [
             [
-                'email' => 'taro@example.com',
-                'item' => '腕時計',
-                'payment' => 'コンビニ支払い',
-                'postal_code' => '100-0001',
-                'address' => '東京都千代田区千代田1-1',
-                'building' => null,
-            ],
-            [
                 'email' => 'hanako@example.com',
                 'item' => 'ショルダーバッグ',
                 'payment' => 'カード支払い',

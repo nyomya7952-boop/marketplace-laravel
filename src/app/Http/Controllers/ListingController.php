@@ -16,7 +16,7 @@ class ListingController extends Controller
     public function showListing()
     {
         $categories = Category::all();
-        $conditions = MasterData::where('type', 'condition')->get();
+        $conditions = MasterData::where('type', 'condition')->orderBy('id', 'asc')->get();
 
         return view('item.create', [
             'categories' => $categories,

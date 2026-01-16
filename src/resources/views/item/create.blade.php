@@ -101,8 +101,7 @@
         <div class="create__section">
             <h2 class="create__section-title">販売価格</h2>
             <div class="create__price-container">
-                <span class="create__price-symbol">¥</span>
-                <input type="number" name="price" id="price" class="create__price-input" value="{{ old('price') }}" required min="1" placeholder="0">
+                <input type="number" name="price" id="price" class="create__price-input" value="{{ old('price') }}" required min="1" placeholder="¥">
             </div>
             @error('price')
                 <div class="create__error">{{ $message }}</div>
