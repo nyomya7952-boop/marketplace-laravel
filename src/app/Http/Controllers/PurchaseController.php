@@ -30,7 +30,7 @@ class PurchaseController extends Controller
             return $validationError;
         }
 
-        $paymentMethods = MasterData::where('type', 'payment_method')->get();
+        $paymentMethods = MasterData::where('type', 'payment_method')->orderBy('id', 'asc')->get();
         $shippingInfo = $this->getShippingInfo();
 
         return view('item.purchase', [
@@ -130,8 +130,15 @@ class PurchaseController extends Controller
                     'success' => true,
                     'url' => $checkoutSession->url,
                     'is_konbini' => $isKonbini,
-                    'is_pending' => $isKonbini // コンビニ支払いの場合は入金待ち状態
+                    'is_pending' => $isKonbini, // コンビニ支払いの場合は入金待ち状態
+                    'redirect_url' => $isKonbini ? route('items.index') : null // コンビニ支払いの場合は商品一覧へのURL
                 ]);
+            }
+
+            // コンビニ支払いの場合は商品一覧にリダイレクト
+            if ($isKonbini) {
+                return redirect()->route('items.index')
+                    ->with('success', 'コンビニ支払いの手続きが完了しました。入金確認後、商品が発送されます。');
             }
 
             return redirect($checkoutSession->url);

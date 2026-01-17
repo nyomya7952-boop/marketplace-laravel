@@ -220,17 +220,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     clearShippingError();
                     clearFlash();
 
-                    // Stripe決済画面を新規タブで開く（コンビニ支払い・カード支払い共通）
-                    const stripeWindow = window.open(data.url, '_blank');
-
-                    // コンビニ支払いの場合、入金待ち状態にする
+                    // コンビニ支払いの場合、入金待ち状態にして商品一覧にリダイレクト
                     if (data.is_konbini && data.is_pending) {
-                        if (submitButton) {
-                            submitButton.disabled = true;
-                            submitButton.textContent = '入金待ち';
+                        // Stripe決済画面を新規タブで開く（支払い情報確認用）
+                        window.open(data.url, '_blank');
+
+                        // 商品一覧画面に自動遷移
+                        if (data.redirect_url) {
+                            window.location.href = data.redirect_url;
+                        } else {
+                            // redirect_urlがない場合のフォールバック
+                            window.location.href = '{{ route("items.index") }}';
                         }
                         return;
                     }
+
+                    // カード支払いの場合、Stripe決済画面を新規タブで開く
+                    const stripeWindow = window.open(data.url, '_blank');
 
                     // カード支払いの場合、Stripe画面が閉じられたかどうかを監視
                     // ただし、決済完了した場合は処理しない

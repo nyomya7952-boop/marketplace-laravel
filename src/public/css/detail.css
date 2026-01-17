@@ -190,13 +190,17 @@
 
 .detail__info-item {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
 }
 
 .detail__info-label {
     font-weight: bold;
     color: #666;
+    width: 100px;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .detail__categories {
@@ -220,8 +224,8 @@
 
 /* コメントセクション */
 .detail__comments-section {
-    margin-top: 40px;
-    padding-top: 40px;
+    margin-top: 0;
+    padding-top: 30px;
     border-top: 1px solid #e0e0e0;
 }
 

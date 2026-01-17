@@ -95,53 +95,53 @@
                     @endif
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- コメントセクション -->
-    <div class="detail__comments-section">
-        <h2 class="detail__section-title">コメント({{ $item->comments->count() }})</h2>
+            <!-- コメントセクション -->
+            <div class="detail__comments-section">
+                <h2 class="detail__section-title">コメント({{ $item->comments->count() }})</h2>
 
-        <!-- 既存のコメント -->
-        @if($item->comments->count() > 0)
-            <div class="detail__comments-list">
-                @foreach($item->comments as $comment)
-                    <div class="detail__comment">
-                        <div class="detail__comment-user">
-                            <div class="detail__comment-avatar">
-                                @if($comment->user->profile_image_path)
-                                    <img src="{{ asset('storage/' . $comment->user->profile_image_path) }}" alt="{{ $comment->user->name }}">
+                <!-- 既存のコメント -->
+                @if($item->comments->count() > 0)
+                    <div class="detail__comments-list">
+                        @foreach($item->comments as $comment)
+                            <div class="detail__comment">
+                                <div class="detail__comment-user">
+                                    <div class="detail__comment-avatar">
+                                        @if($comment->user->profile_image_path)
+                                            <img src="{{ asset('storage/' . $comment->user->profile_image_path) }}" alt="{{ $comment->user->name }}">
+                                        @else
+                                            <div class="detail__comment-avatar-placeholder">{{ mb_substr($comment->user->name, 0, 1) }}</div>
+                                        @endif
+                                    </div>
+                                    <span class="detail__comment-username">{{ $comment->user->name }}</span>
+                                </div>
+                                <div class="detail__comment-content">
+                                    {!! nl2br(e($comment->content)) !!}
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+
+                <!-- コメント投稿フォーム -->
+                <div class="detail__comment-form">
+                    <h3 class="detail__section-title">商品へのコメント</h3>
+                    <form id="comment-form" action="{{ route('items.comment', ['item_id' => $item->id]) }}" method="post">
+                        @csrf
+                        <textarea name="content" class="detail__comment-textarea" rows="5" placeholder="コメントを入力してください"></textarea>
+                        @error('content')
+                            <div class="detail__error">
+                                @if($message === 'コメントするにはログインしてください')
+                                    コメントするには<a href="{{ route('login') }}">ログイン</a>してください
                                 @else
-                                    <div class="detail__comment-avatar-placeholder">{{ mb_substr($comment->user->name, 0, 1) }}</div>
+                                    {{ $message }}
                                 @endif
                             </div>
-                            <span class="detail__comment-username">{{ $comment->user->name }}</span>
-                        </div>
-                        <div class="detail__comment-content">
-                            {!! nl2br(e($comment->content)) !!}
-                        </div>
-                    </div>
-                @endforeach
+                        @enderror
+                        <button type="submit" class="detail__comment-submit">コメントを送信する</button>
+                    </form>
+                </div>
             </div>
-        @endif
-
-        <!-- コメント投稿フォーム -->
-        <div class="detail__comment-form">
-            <h3 class="detail__section-title">商品へのコメント</h3>
-            <form id="comment-form" action="{{ route('items.comment', ['item_id' => $item->id]) }}" method="post">
-                @csrf
-                <textarea name="content" class="detail__comment-textarea" rows="5" placeholder="コメントを入力してください"></textarea>
-                @error('content')
-                    <div class="detail__error">
-                        @if($message === 'コメントするにはログインしてください')
-                            コメントするには<a href="{{ route('login') }}">ログイン</a>してください
-                        @else
-                            {{ $message }}
-                        @endif
-                    </div>
-                @enderror
-                <button type="submit" class="detail__comment-submit">コメントを送信する</button>
-            </form>
         </div>
     </div>
 </div>
